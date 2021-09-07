@@ -1,0 +1,24 @@
+@media(max-width: 1400px) {
+
+}
+
+@media(max-width: 1200px) {
+    .searchForm {
+        display: none;
+    }
+
+    .siteHeader__bottom__btn,
+    .siteMenu__link {
+        font-size: 12px;
+    }
+
+    .siteHeader__bottom__btn__img {
+        width: 20px;
+        height: auto;
+    }
+
+    .siteHeader__companyLink__img {
+        width: 100px;
+        height: auto;
+    }
+}
