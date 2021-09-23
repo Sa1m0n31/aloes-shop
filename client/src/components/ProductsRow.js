@@ -51,8 +51,8 @@ const ProductsRow = ({title}) => {
         </h2>
 
         <main className="productsRow__main">
-            {products.map((item) => {
-                return <a className="productsRow__main__item">
+            {products.map((item, index) => {
+                return <a className={index !== 4 && index !== 3 ? "productsRow__main__item" : (index !== 3 ? "productsRow__main__item productsRow__main__item--1200" : "productsRow__main__item productsRow__main__item--996")}>
                     <img className="productsRow__item__img" src={item.img} alt={item.title} />
                     <h3 className="productsRow__item__title">
                         {item.title}

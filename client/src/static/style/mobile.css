@@ -1,3 +1,13 @@
+@media(max-width: 1600px) {
+    .d-1600 {
+        display: none;
+    }
+
+    .footer__col {
+        width: 25%;
+    }
+}
+
 @media(max-width: 1400px) {
 
 }
@@ -20,5 +30,115 @@
     .siteHeader__companyLink__img {
         width: 100px;
         height: auto;
+    }
+
+    .aboutProducent__text, .aboutProducent__text2 {
+        font-size: 14px;
+    }
+
+    .advantages, .iconsSection__main {
+        width: var(--siteWidth);
+    }
+
+    .productsRow__main__item--1200 {
+        display: none;
+    }
+
+    .footer__col__header {
+        font-size: 15px;
+    }
+
+    .footer__col__list__item {
+        padding: 5px 0;
+        font-size: 13px;
+    }
+
+    .button--newsletter {
+        font-size: 12px;
+    }
+
+    .footer__col {
+        width: 20%;
+    }
+
+    .footer__col:nth-of-type(4) {
+        width: 30%;
+    }
+}
+
+@media(max-width: 996px) {
+    .productsRow__main__item--996 {
+        display: none;
+    }
+
+    .footer .footer__col {
+        width: 50%;
+        margin-bottom: 40px;
+    }
+
+    .footer__col * {
+        text-align: center;
+    }
+
+    .footer__newsletter {
+        max-width: 350px;
+        margin: 20px auto;
+    }
+}
+
+@media(max-width: 768px) {
+    .advantagesDivider,
+    .productsRow::before {
+        display: none;
+    }
+
+    .aboutProducent .flex,
+    .productsRow__main {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .productsRow__main__item {
+        width: 80%;
+        max-width: 350px;
+        margin-bottom: 30px;
+    }
+
+    .aboutProducent .flex .aboutProducent__text {
+        margin-left: 0;
+        margin-top: 40px;
+    }
+
+    .iconsSection {
+        background: #fff;
+    }
+
+    .advantages, .iconsSection__main {
+        flex-direction: column;
+    }
+
+    .advantages__item {
+        width: 60%;
+        max-width: 300px;
+        margin-bottom: 60px;
+    }
+
+    .advantages__header {
+        font-size: 17px;
+        margin: 20px 0;
+    }
+
+    .aboutProducent__text2 {
+        margin-top: 30px;
+    }
+
+    .footer .footer__col {
+        width: 100%;
+    }
+}
+
+@media(max-width: 576px) {
+    .footer__newsletter {
+        max-width: 80vw;
     }
 }
