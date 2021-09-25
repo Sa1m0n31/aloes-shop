@@ -8,6 +8,9 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import MyAccount from "./pages/MyAccount";
 import ShopPage from "./pages/ShopPage";
+import SingleProduct from "./pages/SingleProduct";
+import Cart from "./pages/Cart";
+import ShippingAndPayment from "./pages/ShippingAndPayment";
 
 function App() {
   return <Router>
@@ -27,13 +30,13 @@ function App() {
       <ShopPage />
     </Route>
     <Route path="/produkt">
-
+      <SingleProduct />
     </Route>
     <Route path="/koszyk">
-
+      <Cart />
     </Route>
     <Route path="/zamowienie">
-
+        <ShippingAndPayment />
     </Route>
   </Router>
 }

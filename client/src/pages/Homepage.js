@@ -11,7 +11,6 @@ import AddedToCart from "../components/AddedToCart";
 
 const Homepage = () => {
     return <div className="container">
-
         <AddedToCart />
 
         <SiteHeader />
