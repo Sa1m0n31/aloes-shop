@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import exampleImg1 from '../static/img/example1.png';
 import exampleImg2 from '../static/img/example2.png';
 import exampleImg3 from '../static/img/example3.png';
+import SectionHeader from "./SectionHeader";
 
 const ProductsRow = ({title}) => {
     const [products, setProducts] = useState([]);
@@ -46,14 +47,14 @@ const ProductsRow = ({title}) => {
     }, []);
 
     return <section className="productsRow">
-        <h2 className="productsRow__header">
-            {title}
-        </h2>
+        <SectionHeader title={title} />
 
         <main className="productsRow__main">
             {products.map((item, index) => {
                 return <a className={index !== 4 && index !== 3 ? "productsRow__main__item" : (index !== 3 ? "productsRow__main__item productsRow__main__item--1200" : "productsRow__main__item productsRow__main__item--996")}>
-                    <img className="productsRow__item__img" src={item.img} alt={item.title} />
+                    <figure className="productsRow__item__imgWrapper">
+                        <img className="productsRow__item__img" src={item.img} alt={item.title} />
+                    </figure>
                     <h3 className="productsRow__item__title">
                         {item.title}
                     </h3>

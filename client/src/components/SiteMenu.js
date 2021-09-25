@@ -16,7 +16,7 @@ const SiteMenu = () => {
         ]);
     }, []);
 
-    return <menu className="siteMenu">
+    return <menu className="siteMenu d-desktop">
         <ul className="siteMenu__list">
             {categories.map((item) => {
                 return <li className="siteMenu__item">

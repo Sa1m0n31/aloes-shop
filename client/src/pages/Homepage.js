@@ -6,10 +6,16 @@ import ProductsRow from "../components/ProductsRow";
 import Footer from "../components/Footer";
 import AboutProducent from "../components/AboutProducent";
 import IconsSection from "../components/IconsSection";
+import SiteHeaderMobile from "../components/SiteHeaderMobile";
+import AddedToCart from "../components/AddedToCart";
 
 const Homepage = () => {
     return <div className="container">
+
+        <AddedToCart />
+
         <SiteHeader />
+        <SiteHeaderMobile />
         <SiteMenu />
         <HeroSection />
         <ProductsRow title="Polecane" />

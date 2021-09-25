@@ -1,12 +1,11 @@
 import React from 'react'
 import logo from '../static/img/logo.png';
 import Advantages from "./Advantages";
+import SectionHeader from "./SectionHeader";
 
-const AboutProducent = () => {
-    return <section className="section aboutProducent">
-        <h2 className="productsRow__header">
-            O producencie
-        </h2>
+const AboutProducent = ({shop}) => {
+    return <section className={shop ? "section aboutProducent aboutProducent--shop" : "section aboutProducent"}>
+        {!shop ? <SectionHeader title="O producencie" /> : ""}
 
         <article className="aboutProducent__content">
             <section className="flex">
@@ -27,7 +26,7 @@ const AboutProducent = () => {
             </p>
         </article>
 
-        <Advantages />
+        {!shop ? <Advantages /> : ""}
     </section>
 }
 

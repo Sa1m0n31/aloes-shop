@@ -40,6 +40,11 @@
         width: var(--siteWidth);
     }
 
+    .productsRow__main {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
     .productsRow__main__item--1200 {
         display: none;
     }
@@ -87,6 +92,14 @@
 }
 
 @media(max-width: 768px) {
+    .d-desktop {
+        display: none;
+    }
+
+    .d-mobile {
+        display: block;
+    }
+
     .advantagesDivider,
     .productsRow::before {
         display: none;
@@ -135,10 +148,121 @@
     .footer .footer__col {
         width: 100%;
     }
+
+    .siteHeader__top {
+        margin-top: 5px;
+        justify-content: center;
+    }
+
+    .siteHeader__top__header {
+        text-align: center;
+        margin-top: 5px;
+        font-size: 12px;
+    }
+
+    .siteHeader__hamburgerMenu {
+        width: 40px;
+        height: auto;
+        background: transparent;
+        border: none;
+        outline: none;
+    }
+
+    .hamburgerMenu__img {
+        width: 100%;
+    }
+
+    .hero {
+        width: 100%;
+        margin: 40px auto;
+    }
+
+    .banner__img {
+        height: 250px;
+    }
+
+    .siteHeader__companyLink__img {
+        width: 60px;
+    }
+
+    .siteHeaderMobile,
+    .siteHeader__bottom {
+        padding-bottom: 20px;
+        border-bottom: 1px solid #DEDEDE;
+    }
+
+    .siteHeader__bottom {
+        margin-top: 15px;
+    }
+
+    .siteHeaderMobile {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: var(--siteWidth);
+        margin: auto;
+        padding-top: 20px;
+    }
+
+    .siteHeaderMobile__link {
+        width: 30px;
+        height: auto;
+    }
+
+    .siteHeaderMobile__link__img {
+        width: 100%;
+        height: auto;
+    }
+
+    .loginForm, .afterLoginForm {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .login__header {
+        font-size: 17px;
+        margin-top: 40px;
+    }
+
+    .login {
+        margin: 20px auto 40px;
+    }
 }
 
 @media(max-width: 576px) {
     .footer__newsletter {
         max-width: 80vw;
+    }
+
+    .label__icon {
+        margin-right: 12px;
+    }
+
+    .form__flex {
+        flex-direction: column;
+        margin-top: -25px;
+    }
+
+    .form__flex .label {
+        width: 100% !important;
+        margin: 15px auto !important;
+    }
+
+    .filterBetween:first-of-type {
+        margin-left: 0;
+    }
+
+    .addedToCart__buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .addedToCart__header {
+        font-size: 17px;
+    }
+
+    .button--addedToCart {
+        width: 80%;
+        margin-top: 15px;
     }
 }

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="43.884" height="32.913" viewBox="0 0 43.884 32.913">
+  <g id="shopping-basket" transform="translate(0 0)">
+    <g id="Group_2" data-name="Group 2" transform="translate(0 12.8)">
+      <g id="Group_1" data-name="Group 1" transform="translate(0)">
+        <path id="Path_1" data-name="Path 1" d="M43.7,213.7a.913.913,0,0,0-.733-.369H.915a.922.922,0,0,0-.735.368.913.913,0,0,0-.141.808l4.7,15.679a4.545,4.545,0,0,0,4.379,3.258H34.764a4.542,4.542,0,0,0,4.377-3.257l4.7-15.679A.911.911,0,0,0,43.7,213.7Zm-6.312,15.961a2.731,2.731,0,0,1-2.629,1.955H9.121a2.727,2.727,0,0,1-2.628-1.955l-4.35-14.5h39.6Z" transform="translate(0 -213.335)"/>
+      </g>
+    </g>
+    <g id="Group_4" data-name="Group 4" transform="translate(10.971 0)">
+      <g id="Group_3" data-name="Group 3" transform="translate(0 0)">
+        <path id="Path_2" data-name="Path 2" d="M136.685,64.118a.915.915,0,0,0-1.249.34l-7.314,12.8a.915.915,0,0,0,.342,1.247.9.9,0,0,0,.453.121.916.916,0,0,0,.8-.461l7.314-12.8A.916.916,0,0,0,136.685,64.118Z" transform="translate(-128.002 -63.997)"/>
+      </g>
+    </g>
+    <g id="Group_6" data-name="Group 6" transform="translate(23.77 0)">
+      <g id="Group_5" data-name="Group 5" transform="translate(0 0)">
+        <path id="Path_3" data-name="Path 3" d="M286.348,77.257l-7.314-12.8a.916.916,0,0,0-1.591.907l7.314,12.8a.916.916,0,0,0,.8.461.9.9,0,0,0,.454-.121A.912.912,0,0,0,286.348,77.257Z" transform="translate(-277.322 -63.997)"/>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <g id="user_square" transform="translate(-2 -2)">
+    <path id="Path_23" data-name="Path 23" d="M12,14a4,4,0,1,0-4-4A4,4,0,0,0,12,14Zm0-6a2,2,0,1,1-2,2A2,2,0,0,1,12,8Z"/>
+    <path id="Path_24" data-name="Path 24" d="M4,22a2,2,0,0,1-2-2V4A2,2,0,0,1,4,2H20a2,2,0,0,1,2,2V20a2,2,0,0,1-2,2ZM4,4V20H7a5,5,0,0,1,10,0h3V4ZM15,20a3,3,0,0,0-6,0Z"/>
+  </g>
+</svg>
