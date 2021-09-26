@@ -1,8 +1,50 @@
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import mailIcon from '../static/img/mail.svg'
+import {getAllCategories} from "../helpers/categoryFunctions";
+import {addEmailToNewsletter} from "../helpers/newsletterFunctions";
 
 const Footer = () => {
     const [email, setEmail] = useState("");
+    const [categories, setCategories] = useState([]);
+    const [newsletterResponse, setNewsletterResponse] = useState(0);
+
+    useEffect(() => {
+        getAllCategories()
+            .then(res => {
+                if(res.data.result) setCategories(res.data.result);
+            })
+    }, []);
+
+    const isEmail = (email) => {
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    }
+
+    const addToNewsletter = () => {
+        if(isEmail(email)) {
+            addEmailToNewsletter(email)
+                .then(res => {
+                    if(res.data.result === 1) {
+                        setNewsletterResponse(1);
+                        setEmail("");
+                    }
+                    else {
+                        setNewsletterResponse(-1);
+                    }
+                });
+        }
+        else {
+            setNewsletterResponse(2);
+        }
+    }
+
+    useEffect(() => {
+        if(newsletterResponse !== 0) {
+            setTimeout(() => {
+                setNewsletterResponse(0);
+            }, 3000);
+        }
+    }, [newsletterResponse]);
 
     return <footer className="footer">
         <section className="footer__col">
@@ -10,36 +52,14 @@ const Footer = () => {
                 Nasze produkty
             </h4>
             <ul className="footer__col__list">
-                <li className="footer__col__list__item">
-                    <a className="footer__col__list__link" href="/sklep/suplementy-diety">
-                        Suplementy diety
-                    </a>
-                </li>
-                <li className="footer__col__list__item">
-                    <a className="footer__col__list__link" href="/sklep/suplementy-diety">
-                        Sylwetka
-                    </a>
-                </li>
-                <li className="footer__col__list__item">
-                    <a className="footer__col__list__link" href="/sklep/suplementy-diety">
-                        Mięśnie i stawy
-                    </a>
-                </li>
-                <li className="footer__col__list__item">
-                    <a className="footer__col__list__link" href="/sklep/suplementy-diety">
-                        Suplementy diety
-                    </a>
-                </li>
-                <li className="footer__col__list__item">
-                    <a className="footer__col__list__link" href="/sklep/suplementy-diety">
-                        Suplementy diety
-                    </a>
-                </li>
-                <li className="footer__col__list__item">
-                    <a className="footer__col__list__link" href="/sklep/suplementy-diety">
-                        Suplementy diety
-                    </a>
-                </li>
+                {categories?.map((item, index) => {
+                    return <li className="footer__col__list__item" key={index}>
+                        <a className="footer__col__list__link" href={`/sklep/${item.permalink}`} >
+                            {item.name}
+                        </a>
+                    </li>
+
+                })}
             </ul>
         </section>
 
@@ -90,15 +110,19 @@ const Footer = () => {
             </h4>
 
             <section className="footer__newsletter">
-                <img className="footer__newsletter__icon" src={mailIcon} alt="adres-email" />
-                <input className="input--newsletter"
-                       name="newsletter"
-                       value={email}
-                       placeholder="Adres e-mail"
-                       onChange={(e) => { setEmail(e.target.value); }} />
-                <button className="button button--newsletter">
-                    Zapisz się
-                </button>
+                {!newsletterResponse ? <>
+                    <img className="footer__newsletter__icon" src={mailIcon} alt="adres-email" />
+                    <input className="input--newsletter"
+                           name="newsletter"
+                           value={email}
+                           placeholder="Adres e-mail"
+                           onChange={(e) => { setEmail(e.target.value); }} />
+                    <button className="button button--newsletter" onClick={() => { addToNewsletter(); }}>
+                        Zapisz się
+                    </button>
+                </> : <h4 className="newsletterResponse">
+                    {newsletterResponse === 2 ? "Proszę podać poprawny adres e-mail" : newsletterResponse === 1 ? "Dziękujemy za zapisanie się do naszego newslettera" : "Podany adres e-mail jest już zapisany do naszego newslettera"}
+                </h4>}
             </section>
         </section>
 

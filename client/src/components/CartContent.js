@@ -7,11 +7,11 @@ import SectionHeader from "./SectionHeader";
 import example from '../static/img/example3.png'
 
 const CartContent = () => {
-    const { editCart, removeFromCart } = useContext(CartContext);
+    const { cartContent, editCart, removeFromCart } = useContext(CartContext);
 
     const [sum, setSum] = useState(0);
     const [remove, setRemove] = useState(false);
-    const [currentCart, setCurrentCart] = useState([1]);
+    const [currentCart, setCurrentCart] = useState([]);
 
     useEffect(() => {
         calculateCartSum();
@@ -19,15 +19,15 @@ const CartContent = () => {
 
     useEffect(() => {
         calculateCartSum();
-        setCurrentCart([1]);
+        setCurrentCart(cartContent);
     }, [remove]);
 
     const calculateCartSum = () => {
         let sum = 0;
-        // currentCart?.forEach((item, index, array) => {
-        //     sum += item.price * item.amount;
-        //     if(index === array.length-1) setSum(sum);
-        // });
+        currentCart?.forEach((item, index, array) => {
+            sum += item.price * item.amount;
+            if(index === array.length-1) setSum(sum);
+        });
     }
 
     useEffect(() => {
@@ -39,21 +39,21 @@ const CartContent = () => {
     };
 
     return <section className="cartContent">
-        {/*cartContent?.length */ 1 ? <main className="page cart">
+        {cartContent?.length ? <main className="page cart">
             <SectionHeader title="Twój koszyk" />
 
             <main className="cart__content">
                 {currentCart.map((item, index) => {
                     return <section className="cart__item">
                         <section className="cart__item__section">
-                            <img className="cart__item__img" src={example} alt="title"/>
+                            <img className="cart__item__img" src={`${settings.API_URL}/image?url=/media/${item.img}`} alt="title"/>
 
                             <h3 className="cart__item__title d-none d-md-block">
                                 <h3 className="cart__item__key">
                                     Nazwa
                                 </h3>
                                 <h4 className="cart__item__value">
-                                    Aloes
+                                    {item.title}
                                 </h4>
                             </h3>
                         </section>
@@ -63,17 +63,22 @@ const CartContent = () => {
                                 Cena
                             </h3>
                             <h4 className="cart__item__value">
-                                123 PLN
+                                {item.price} PLN
                             </h4>
                         </h3>
 
                         <label className="cart__item__amount">
-                            Ilość:
-                            <input className="cart__item__input"
-                                   name={item.uuid}
-                                   value={item.amount}
-                                   onClick={(e) => { handleInputClick(e); }}
-                                   type="number"/>
+                            <h3 className="cart__item__key">
+                                Ilość
+                            </h3>
+                            <h4 className="cart__item__value">
+                                {item.amount}
+                            </h4>
+                            {/*<input className="cart__item__input"*/}
+                            {/*       name={item.uuid}*/}
+                            {/*       value={item.amount}*/}
+                            {/*       onClick={(e) => { handleInputClick(e); }}*/}
+                            {/*       type="number"/>*/}
                         </label>
 
                         <section className="cart__item__price cart__item__price--value">
@@ -81,7 +86,7 @@ const CartContent = () => {
                                 Wartość
                             </h3>
                             <h4 className="cart__item__value">
-                                246 PLN
+                                {item.price * item.amount} PLN
                             </h4>
                         </section>
 

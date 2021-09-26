@@ -17,7 +17,20 @@
     "uuid": "^8.3.2",
     "uuidv4": "^6.2.12",
     "web-vitals": "^1.1.2",
-    "yup": "^0.32.9"
+    "yup": "^0.32.9",
+    "aos": "^2.3.4",
+    "bootstrap": "^5.0.2",
+    "jodit-react": "^1.1.1",
+    "react-animated-modal": "^1.1.1",
+    "react-async": "^10.0.1",
+    "react-bootstrap": "^1.6.1",
+    "react-cookie-consent": "^6.3.0",
+    "react-helmet": "^6.1.0",
+    "react-image-gallery": "^1.1.1",
+    "react-image-lightbox": "^5.1.1",
+    "react-images-upload": "^1.2.8",
+    "react-loader-spinner": "^4.0.0",
+    "react-modal": "^3.14.3"
   },
   "scripts": {
     "start": "react-scripts start",

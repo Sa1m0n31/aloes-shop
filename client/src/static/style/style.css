@@ -18,7 +18,7 @@
     --siteWidthNarrow: clamp(200px, 75vw, 1500px);
 }
 
-h1, h2, h3, h4, h5, h6, p, label, button, a, li, span {
+h1, h2, h3, h4, h5, h6, p, label, button, a, li, span, textarea {
     font-family: 'Open sans', sans-serif;
 }
 
@@ -506,6 +506,12 @@ a {
     background: #854B19;
 }
 
+.newsletterResponse {
+    font-size: 15px;
+    font-weight: 500;
+    padding-bottom: 10px;
+}
+
 .footer__bottom__header {
     text-align: center;
     font-size: 12px;
@@ -753,7 +759,7 @@ a {
 /* Added to cart */
 .addedToCart {
     background: rgba(0, 0, 0, .4);
-    display: flex;
+    /*display: flex;*/
     justify-content: center;
     align-items: center;
     position: fixed;
@@ -762,6 +768,7 @@ a {
     width: 100%;
     height: 100vh;
     z-index: 100;
+    display: none;
     transition: .5s all;
 }
 
@@ -861,6 +868,14 @@ a {
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #BBBBBB;
+}
+
+.single__header__price__crossed {
+    color: #CCCCCC;
+    font-weight: 500;
+    font-size: 24px;
+    padding-right: 25px;
+    text-decoration: line-through;
 }
 
 .single__header__title {
@@ -1066,4 +1081,109 @@ a {
 
 .cart__item__price--value .cart__item__value {
     margin-left: 0;
+}
+
+/* Shipping and payment */
+.shippingAndPayment {
+    width: var(--siteWidth);
+    margin: 40px auto;
+}
+
+.shippingAndPayment__form {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 40px 0;
+    flex-wrap: wrap;
+}
+
+.shippingAndPayment__form__section {
+    width: 40%;
+    margin-right: 40px;
+    max-width: 600px;
+}
+
+.shippingAndPayment .form__inner .label--vat {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.textarea {
+    border: 1px solid var(--brown);
+    padding: 15px;
+    width: 100%;
+    height: 100px;
+    resize: none;
+    outline: none;
+    margin: 20px auto;
+    max-width: 500px;
+    display: block;
+}
+
+.form__inner__header--extraMargin {
+    margin-top: 40px;
+}
+
+.button--coupon {
+    padding: 3px 15px;
+}
+
+.label--coupon {
+    max-width: 300px;
+    margin: 0;
+    padding: 7px 0;
+}
+
+.label--section {
+    margin-top: 0;
+    margin-bottom: 0;
+    border: none;
+}
+
+.button--shippingAndPayment {
+    width: 100%;
+    height: 60px;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.shippingAndPayment .cart__item__price {
+    margin-bottom: 25px;
+}
+
+.shippingAndPayment .cart__item__price .cart__item__value {
+    margin-bottom: -3px;
+}
+
+/* TY page */
+.tyPage {
+    width: var(--siteWidth);
+    margin: 40px auto;
+}
+
+.button--ty {
+    width: 400px;
+    height: 50px;
+    margin: 30px auto 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+}
+
+.tyPage__header {
+    text-align: center;
+    font-size: 24px;
+    margin: 40px auto;
+}
+
+.tyPage__header--noMarginTop {
+    margin-top: 0;
+}
+
+/* Page */
+.page {
+    width: var(--siteWidth);
+    margin: 50px auto;
 }

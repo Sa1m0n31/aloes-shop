@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from 'react'
+import {getAllCategories} from "../helpers/categoryFunctions";
 
 const SiteMenu = () => {
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        setCategories([
-            'Strona główna',
-            'Suplementy diety',
-            'Sylwetka',
-            "Mięśnie i stawy",
-            'Pielęgnacja',
-            'Produkty pszczele',
-            'Napoje',
-            'Zestawy'
-        ]);
+        getAllCategories()
+            .then(res => {
+                setCategories(res?.data?.result);
+            });
     }, []);
 
     return <menu className="siteMenu d-desktop">
         <ul className="siteMenu__list">
-            {categories.map((item) => {
-                return <li className="siteMenu__item">
-                    <a className="siteMenu__link">
-                        {item}
+            <li className="siteMenu__item">
+                <a className="siteMenu__link" href="/">
+                    Strona główna
+                </a>
+            </li>
+            {categories?.map((item, index) => {
+                return <li key={index} className="siteMenu__item">
+                    <a className="siteMenu__link" href={`/sklep/${item.permalink}`}>
+                        {item.name}
                     </a>
                 </li>
             })}

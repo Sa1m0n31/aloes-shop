@@ -17,8 +17,8 @@ const Homepage = () => {
         <SiteHeaderMobile />
         <SiteMenu />
         <HeroSection />
-        <ProductsRow title="Polecane" />
-        <ProductsRow title="Promocje" />
+        <ProductsRow title="Polecane" type="Recoms" />
+        <ProductsRow title="Promocje" type="Discounts" />
         <AboutProducent />
         <IconsSection />
         <Footer />

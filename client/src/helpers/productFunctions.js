@@ -31,4 +31,24 @@ const getImageById = (id) => {
     return axios.post(`${API_URL}/product/get-image`, { id });
 }
 
-export { getAllProducts, getSingleProduct, getProductByName, getProductsByCategory, getImageById, getProductById };
+const getRecommendations = () => {
+    return axios.get(`${API_URL}/product/get-recommendations`);
+}
+
+const getDiscounts = () => {
+    return axios.get(`${API_URL}/product/get-discounts`);
+}
+
+const showAddedToCartModal = () => {
+    document.querySelector(".addedToCart").style.opacity = "1";
+    document.querySelector(".addedToCart").style.display = "flex";
+}
+
+const hideAddedToCartModal = () => {
+    document.querySelector(".addedToCart").style.opacity = "0";
+    setTimeout(() => {
+        document.querySelector(".addedToCart").style.display = "none";
+    }, 500);
+}
+
+export { getAllProducts, getSingleProduct, getProductByName, getProductsByCategory, getImageById, getProductById, getRecommendations, getDiscounts, showAddedToCartModal, hideAddedToCartModal };

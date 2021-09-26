@@ -24,6 +24,10 @@
     .single__header__price {
         font-size: 26px;
     }
+
+    .shippingAndPayment__form__section {
+        width: 49%;
+    }
 }
 
 @media(max-width: 1200px) {
@@ -159,6 +163,11 @@
     .cart__item__price--value {
         align-items: center;
     }
+
+    .shippingAndPayment__form__section {
+        width: 100%;
+        margin-right: 0;
+    }
 }
 
 @media(max-width: 768px) {
@@ -266,7 +275,7 @@
     }
 
     .siteHeaderMobile {
-        display: flex;
+        display: flex !important;
         justify-content: space-between;
         align-items: center;
         width: var(--siteWidth);
@@ -316,6 +325,85 @@
 
     .single__info {
         padding: 10px;
+    }
+
+    .shippingAndPayment .cart__item__price .cart__item__key {
+        font-size: 15px;
+    }
+
+    .shippingAndPayment .cart__item__price .cart__item__value {
+        font-size: 24px;
+    }
+
+    .mobileMenu {
+        border-top: 5px solid var(--brown);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: #fff;
+        z-index: 101;
+        transform-origin: top right;
+        transform: scaleX(0);
+        transition: .5s all;
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .closeMenuBtn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #AFAFAF;
+        border-radius: 50%;
+        border: none;
+        outline: none;
+        opacity: 0;
+        transition: .4s all;
+    }
+
+    .closeMenuBtn__img {
+        width: 40%;
+    }
+
+    .mobileMenu__list {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 80%;
+        margin: auto;
+        opacity: 0;
+        transition: .4s all;
+        list-style-type: none;
+    }
+
+    .mobileMenu__list__item {
+        border-bottom: 1px solid #DEDEDE;
+        padding: 20px 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    .mobileMenu__list__link {
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .tyPage__header {
+        font-size: 17px;
+    }
+
+    .button--ty {
+        margin-bottom: 60px;
+        width: 100%;
     }
 }
 

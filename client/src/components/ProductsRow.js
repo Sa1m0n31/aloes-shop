@@ -1,76 +1,60 @@
-import React, { useState, useEffect } from 'react'
-
-import exampleImg1 from '../static/img/example1.png';
-import exampleImg2 from '../static/img/example2.png';
-import exampleImg3 from '../static/img/example3.png';
+import React, { useState, useEffect, useContext } from 'react'
 import SectionHeader from "./SectionHeader";
+import {getDiscounts, getRecommendations, showAddedToCartModal} from "../helpers/productFunctions";
+import settings from "../helpers/settings";
+import convertToURL from "../helpers/convertToURL";
+import {CartContext} from "../App";
 
-const ProductsRow = ({title}) => {
+const ProductsRow = ({title, type}) => {
     const [products, setProducts] = useState([]);
+    const { addToCart } = useContext(CartContext);
 
     useEffect(() => {
-        setProducts([
-            {
-                img: exampleImg1,
-                title: "Aloe Vera Gel",
-                subtitle: "Sok aloesowy pyszny",
-                beforeDiscountPrice: 109.99,
-                price: 99.99
-            },
-            {
-                img: exampleImg1,
-                title: "Aloe Vera Gel",
-                subtitle: "Sok aloesowy pyszny",
-                beforeDiscountPrice: 109.99,
-                price: 99.99
-            },
-            {
-                img: exampleImg1,
-                title: "Aloe Vera Gel",
-                subtitle: "Sok aloesowy pyszny",
-                price: 99.99
-            },
-            {
-                img: exampleImg1,
-                title: "Aloe Vera Gel",
-                subtitle: "Sok aloesowy pyszny",
-                price: 99.99
-            },
-            {
-                img: exampleImg1,
-                title: "Aloe Vera Gel",
-                subtitle: "Sok aloesowy pyszny",
-                beforeDiscountPrice: 109.99,
-                price: 99.99
-            }
-        ])
+        if(type === "Recoms") {
+            getRecommendations()
+                .then(res => {
+                    setProducts(res?.data?.result);
+                })
+        }
+        else if(type === "Discounts") {
+            getDiscounts()
+                .then(res => {
+                    setProducts(res?.data?.result);
+                })
+        }
     }, []);
+
+    const addProductToCart = (e, id, title, amount, img, price) => {
+        e.preventDefault();
+        addToCart(id, title, amount, img, price);
+        showAddedToCartModal();
+    }
 
     return <section className="productsRow">
         <SectionHeader title={title} />
 
         <main className="productsRow__main">
             {products.map((item, index) => {
-                return <a className={index !== 4 && index !== 3 ? "productsRow__main__item" : (index !== 3 ? "productsRow__main__item productsRow__main__item--1200" : "productsRow__main__item productsRow__main__item--996")}>
+                return <a href={`http://localhost:3000/produkt/${convertToURL(item.name)}`} className={index !== 4 && index !== 3 ? "productsRow__main__item" : (index !== 3 ? "productsRow__main__item productsRow__main__item--1200" : "productsRow__main__item productsRow__main__item--996")}>
                     <figure className="productsRow__item__imgWrapper">
-                        <img className="productsRow__item__img" src={item.img} alt={item.title} />
+                        <img className="productsRow__item__img" src={`${settings.API_URL}/image?url=/media/${item.file_path}`} alt={item.name} />
                     </figure>
                     <h3 className="productsRow__item__title">
-                        {item.title}
+                        {item.name}
                     </h3>
                     <h4 className="productsRow__item__subtitle">
                         {item.subtitle}
                     </h4>
                     <section className="productsRow__item__prices">
-                        {item.beforeDiscountPrice ? <span className="priceBeforeDiscount">
-                            {item.beforeDiscountPrice} PLN
+                        {item.discount ? <span className="priceBeforeDiscount">
+                            {item.price} PLN
                         </span> : ""}
                         <span className="price">
-                            {item.price} PLN
+                            {item.discount ? item.discount : item.price} PLN
                         </span>
                     </section>
 
-                    <button className="addToCartBtn">
+                    <button className="addToCartBtn" onClick={(e) => { addProductToCart(e, item.id, item.name, 1, item.file_path, item.discount ? item.discount : item.price); }}>
                         Dodaj do koszyka
                     </button>
                 </a>
