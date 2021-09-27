@@ -178,15 +178,6 @@ const PanelOrdersContent = () => {
 
                             <section className="panelContent__column">
                                 <h4 className="panelContent__column__label">
-                                    Nr listu przewozowego
-                                </h4>
-                                <h3 className="panelContent__column__value">
-                                    {item.letter_number ? item.letter_number : ""}
-                                </h3>
-                            </section>
-
-                            <section className="panelContent__column">
-                                <h4 className="panelContent__column__label">
                                     Komentarz
                                 </h4>
                                 <h3 className="panelContent__column__value">

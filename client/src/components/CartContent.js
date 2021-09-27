@@ -48,7 +48,7 @@ const CartContent = () => {
                         <section className="cart__item__section">
                             <img className="cart__item__img" src={`${settings.API_URL}/image?url=/media/${item.img}`} alt="title"/>
 
-                            <h3 className="cart__item__title d-none d-md-block">
+                            <h3 className="cart__item__title">
                                 <h3 className="cart__item__key">
                                     Nazwa
                                 </h3>
@@ -98,7 +98,7 @@ const CartContent = () => {
                     </section>
                 })}
 
-                <section className="cart__item__price">
+                <section className="cart__item__price cart__item__sum">
                     <h3 className="cart__item__key">
                         Podsumowanie
                     </h3>

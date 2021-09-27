@@ -224,7 +224,7 @@ const sendStatus1Email = (id, email, sells) => {
 con.connect(err => {
     /* GET ALL ORDERS */
     router.get("/get-orders", (request, response) => {
-        const query = 'SELECT o.id as id, u.first_name, u.last_name, u.email, o.date, o.payment_status, o.order_status, o.order_comment, o.letter_number FROM orders o LEFT OUTER JOIN users u ON o.user = u.id';
+        const query = 'SELECT o.id as id, u.full_name, u.email, o.date, o.payment_status, o.order_status, o.order_comment FROM orders o LEFT OUTER JOIN users u ON o.user = u.id';
         con.query(query, (err, res) => {
             if (res) {
                 response.send({
@@ -238,19 +238,10 @@ con.connect(err => {
         });
     });
 
-    const decrementStock = (productId, size, quantity) => {
-        const values = [quantity, productId, size];
-        const query1 = 'UPDATE products_stock ps JOIN products p ON ps.id = p.stock_id SET ps.size_1_stock = ps.size_1_stock - ? WHERE p.id = ? AND size_1_name = ?'
-        const query2 = 'UPDATE products_stock ps JOIN products p ON ps.id = p.stock_id SET ps.size_2_stock = ps.size_2_stock - ? WHERE p.id = ? AND size_2_name = ?'
-        const query3 = 'UPDATE products_stock ps JOIN products p ON ps.id = p.stock_id SET ps.size_3_stock = ps.size_3_stock - ? WHERE p.id = ? AND size_3_name = ?'
-        const query4 = 'UPDATE products_stock ps JOIN products p ON ps.id = p.stock_id SET ps.size_4_stock = ps.size_4_stock - ? WHERE p.id = ? AND size_4_name = ?'
-        const query5 = 'UPDATE products_stock ps JOIN products p ON ps.id = p.stock_id SET ps.size_5_stock = ps.size_5_stock - ? WHERE p.id = ? AND size_5_name = ?'
-
-        con.query(query1, values);
-        con.query(query2, values);
-        con.query(query3, values);
-        con.query(query4, values);
-        con.query(query5, values);
+    const decrementStock = (productId, quantity) => {
+        const values = [quantity, productId];
+        const query = 'UPDATE products SET stock = stock - ? WHERE id = ?';
+        con.query(query, values);
     }
 
         /* ADD SELL */
@@ -262,7 +253,7 @@ con.connect(err => {
 
             if(paymentMethod === 2) {
                 /* Jesli za pobraniem - dekrementuj stan magazynowy */
-                decrementStock(productId, size, quantity);
+                decrementStock(productId, quantity);
             }
 
             con.query(query, values, (err, res) => {
@@ -281,26 +272,26 @@ con.connect(err => {
 
         /* ADD ORDER */
         router.post("/add", (request, response) => {
-            let {paymentMethod, shippingMethod, city, street, building, flat, postalCode, sessionId, user, comment, companyName, nip, amount, inPostAddress, inPostCode, inPostCity} = request.body;
-            if (flat === "") flat = null;
+            let {paymentMethod, shippingMethod, city, address, postalCode, sessionId, user, comment, companyName, nip, companyAddress, companyPostalCode, companyCity, amount, inPostAddress, inPostCode, inPostCity} = request.body;
 
             let paymentStatus = "nieopłacone";
-            if(paymentMethod === 1) {
+            if(paymentMethod === 2) {
                 /* Payment method - za pobraniem */
                 paymentStatus = "za pobraniem";
             }
 
-            building = parseInt(building) || 0;
-            let values = [paymentMethod, shippingMethod, city, street, building, flat, postalCode, user, paymentStatus, comment, sessionId, companyName, nip, amount, inPostAddress, inPostCode, inPostCity];
-            const query = 'INSERT INTO orders VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, "złożone", CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?, ?, NULL)';
+            console.log("add new order");
+
+            let values = [paymentMethod, shippingMethod, city, address, postalCode, user, paymentStatus, comment, sessionId, companyName, nip, companyAddress, companyPostalCode, companyCity, amount, inPostAddress, inPostCode, inPostCity];
+            const query = `INSERT INTO orders VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, 'złożone', CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
             values = values.map((item) => {
                 if (item === "") return null;
                 else return item;
             });
-
             con.query(query, values, (err, res) => {
                 let result = 0;
+                console.log(res);
                 console.log(err);
                 if (res) {
                     if (res.insertId) result = res.insertId;
@@ -390,7 +381,7 @@ con.connect(err => {
         router.post("/get-order", (request, response) => {
             const {id} = request.body;
             const values = [id];
-            const query = 'SELECT o.id, o.payment_status, o.order_status, o.letter_number, o.order_comment, u.first_name, u.last_name, u.email, u.phone_number, o.date, o.order_status, pm.name as payment, sm.name as shipping, o.order_comment, o.company_name, o.nip, s.size, s.quantity, p.price, p.name, o.inpost_address, o.inpost_postal_code, inpost_city FROM orders o ' +
+            const query = 'SELECT o.id, o.payment_status, o.order_status, o.order_comment, u.full_name, u.email, u.phone_number, o.date, o.order_status, pm.name as payment, sm.name as shipping, o.order_comment, o.address, o.postal_code, o.city, o.company_name, o.nip, o.company_address, o.company_postal_code, o.company_city, s.quantity, p.price, p.name, o.inpost_address, o.inpost_postal_code, inpost_city FROM orders o ' +
                 'JOIN sells s ON o.id = s.order_id ' +
                 'LEFT OUTER JOIN products p ON p.id = s.product_id ' +
                 'JOIN shipping_methods sm ON o.shipping_method = sm.id ' +
@@ -398,6 +389,8 @@ con.connect(err => {
                 'JOIN users u ON u.id = o.user ' +
                 'WHERE o.id = ?;';
             con.query(query, values, (err, res) => {
+                console.log(err);
+                console.log(res);
                 if(res) {
                     response.send({
                         result: res

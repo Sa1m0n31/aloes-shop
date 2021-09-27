@@ -41,13 +41,13 @@ const getDiscounts = () => {
 
 const showAddedToCartModal = () => {
     document.querySelector(".addedToCart").style.opacity = "1";
-    document.querySelector(".addedToCart").style.display = "flex";
+    document.querySelector(".addedToCart").style.zIndex = "100";
 }
 
 const hideAddedToCartModal = () => {
     document.querySelector(".addedToCart").style.opacity = "0";
     setTimeout(() => {
-        document.querySelector(".addedToCart").style.display = "none";
+        document.querySelector(".addedToCart").style.zIndex = "02";
     }, 500);
 }
 

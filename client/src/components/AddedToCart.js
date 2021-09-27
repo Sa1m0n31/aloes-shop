@@ -8,7 +8,7 @@ const AddedToCart = () => {
     const closeModal = () => {
         modalRef.current.style.opacity = "0";
         setTimeout(() => {
-            modalRef.current.style.display = "none";
+            modalRef.current.style.zIndex = "-2";
         }, 500);
     }
 

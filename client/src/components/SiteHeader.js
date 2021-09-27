@@ -62,7 +62,7 @@ const SiteHeader = () => {
 
         <section className="siteHeader__bottom">
             <section className="siteHeader__bottom__subsection">
-                <a className="siteHeader__companyLink">
+                <a className="siteHeader__companyLink" href="/">
                     <img className="siteHeader__companyLink__img" src={logo} alt="forever-living" />
                 </a>
 

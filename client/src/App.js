@@ -33,6 +33,7 @@ import AddPostPage from "./admin/pages/AddPostPage";
 import OrderDetails from "./admin/pages/OrderDetails";
 import {getProductById} from "./helpers/productFunctions";
 import Page from "./pages/Page";
+import AfterRegisterPage from "./pages/AfterRegisterPage";
 
 const CartContext = React.createContext(null);
 
@@ -156,6 +157,9 @@ function App() {
     </Route>
     <Route path="/dziekujemy">
       <TyPage />
+    </Route>
+    <Route path="/konto-zalozone">
+      <AfterRegisterPage />
     </Route>
     <Route path="/regulamin">
       <Page title="Regulamin" content={""} />

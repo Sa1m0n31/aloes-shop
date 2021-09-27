@@ -23,23 +23,28 @@ con.connect(function(err) {
 
     /* ADD USER */
     router.post("/add-user", (request, response) => {
-       const { firstName, lastName, email, phoneNumber, password, postalCode, city, street, building, flat, dupa } = request.body;
-
-       console.log("adding user....");
-
-       console.log(email);
+       let { fullName, email, phoneNumber, password, postalCode, address, city, companyName, nip, companyAddress, companyPostalCode, companyCity } = request.body;
 
        let hash = null;
        if(password) hash = crypto.createHash('md5').update(password).digest('hex');
 
-       const values = [firstName, lastName, email, hash, city, street, building, flat, postalCode, phoneNumber];
-       const query = 'INSERT INTO users VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+       if(!phoneNumber) phoneNumber = null;
+       if(!address) address = null;
+       if(!city) city = null;
+       if(!postalCode) postalCode = null;
+
+       if(!companyName) companyName = null;
+       if(!nip) nip = null;
+       if(!companyAddress) companyAddress = null;
+       if(!companyPostalCode) companyPostalCode = null;
+       if(!companyCity) companyCity = null;
+
+       const values = [fullName, email, hash, city, address, postalCode, phoneNumber, companyName, nip, companyAddress, companyPostalCode, companyCity];
+       const query = 'INSERT INTO users VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
        con.query(query, values, (err, res) => {
           if(err) {
-              console.log(err);
+              /* User already exists */
               if(err.errno === 1062) {
-                  /* User already exists */
-
                   /* Check if account exists */
                   const values = [email, email];
                   const query = 'SELECT id, (SELECT id FROM users WHERE email = ? AND password IS NOT NULL) as userId FROM users WHERE email = ?';
@@ -54,26 +59,13 @@ con.connect(function(err) {
                           else {
                               /* It's not an account, but send back already existed data - UPDATE */
                               const userId = res[0].id;
-                              const values = [firstName, lastName, city, street, building, flat, postalCode, phoneNumber, email];
-                              const query = 'UPDATE users SET first_name = ?, last_name = ?, city = ?, street = ?, building = ?, flat = ?, postal_code = ?, phone_number = ? WHERE email = ?';
+                              const values = [fullName, city, postalCode, phoneNumber, email];
+                              const query = 'UPDATE users SET full_name = ?, city = ?, street = ?, building = ?, flat = ?, postal_code = ?, phone_number = ? WHERE email = ?';
                               con.query(query, values, (err, res) => {
-                                  got.post("http://localhost:5000/newsletter/add", {
-                                      json: {
-                                          email: email
-                                      },
-                                      responseType: 'json',
-                                  })
-                                      .then(res => {
-                                          console.log('res');
-                                          response.send({
-                                              result: 1,
-                                              userId
-                                          });
-                                      });
-                                  // response.send({
-                                  //     result: 1,
-                                  //     userId
-                                  // });
+                                  response.send({
+                                      result: 1,
+                                      userId
+                                  });
                               });
                           }
                       }
@@ -84,35 +76,19 @@ con.connect(function(err) {
                       }
                   });
               }
+              /* Other error */
               else {
                   response.send({
                       result: 0
                   });
               }
           }
+          /* User not exists */
           else {
-              const userId = res.insertId;
-              /* Add user to newsletter */
-              if(dupa) {
-                  got.post("http://localhost:5000/newsletter/add", {
-                      json: {
-                          email: email
-                      },
-                      responseType: 'json',
-                  })
-                      .then(res => {
-                         response.send({
-                             result: 1,
-                             userId
-                         });
-                      });
-              }
-              else {
-                  response.send({
-                      result: 1,
-                      userId
-                  });
-              }
+              response.send({
+                  userId: res.insertId,
+                  result: 1
+              });
           }
        });
     });

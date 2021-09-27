@@ -8,6 +8,7 @@ import locationIcon from '../static/img/location.svg'
 import companyIcon from '../static/img/company-name.svg'
 import nipIcon from '../static/img/number-sign.svg'
 import phoneIcon from '../static/img/phone.svg'
+import {addUser} from "../helpers/userFunctions";
 
 const RegisterForm = () => {
     const [vat, setVat] = useState(false);
@@ -26,8 +27,8 @@ const RegisterForm = () => {
             .matches(/\d{3,}/, 'Numer telefonu może zawierać wyłącznie cyfry'),
         postalCode: Yup.string()
             .matches(/\d{2}-\d{3}/, "Podaj poprawny kod pocztowy"),
-        check: Yup.boolean()
-            .oneOf([true]),
+        // check: Yup.boolean()
+        //     .oneOf([true]),
         marketing: Yup.boolean()
             .oneOf([true, false])
     });
@@ -41,18 +42,32 @@ const RegisterForm = () => {
             phoneNumber: "",
             postalCode: "",
             city: "",
-            street: "",
+            address: "",
             companyName: "",
             nip: "",
-            companyStreet: "",
+            companyAddress: "",
             companyPostalCode: "",
             companyCity: "",
             check: false,
             marketing: false
         },
         validationSchema,
-        onSubmit: ({email, password, firstName, lastName, phoneNumber, postalCode, city, street, building, flat, marketing}) => {
-            console.log(email);
+        onSubmit: ({email, password, fullName, phoneNumber, postalCode, city, address, companyName, nip, companyAddress, companyPostalCode, companyCity}) => {
+            addUser(email, password, fullName, phoneNumber, address, postalCode, city, companyName, nip, companyAddress, companyPostalCode, companyCity)
+                .then(res => {
+                    if(res.data?.result === 1) {
+                        localStorage.setItem('sec-user-registered', 'true');
+                        window.location = '/konto-zalozone';
+                    }
+                    else if(res.data?.result === -1) {
+                        localStorage.setItem('sec-user-registered', 'exists');
+                        window.location = "/konto-zalozone";
+                    }
+                    else {
+                        localStorage.setItem('sec-user-registered', 'false');
+                        window.location = '/konto-zalozone';
+                    }
+                });
         }
     });
 
@@ -69,6 +84,7 @@ const RegisterForm = () => {
                        value={formik.values.email}
                        onChange={formik.handleChange}
                        placeholder="Adres e-mail" />
+                {formik.errors.email && formik.touched.email ? <span className="formError">{formik.errors.email}</span> : "" }
             </label>
             <label className="label">
                 <img className="label__icon" src={lockIcon} alt="haslo" />
@@ -78,6 +94,7 @@ const RegisterForm = () => {
                        value={formik.values.password}
                        onChange={formik.handleChange}
                        placeholder="Hasło" />
+                {formik.errors.password && formik.touched.password ? <span className="formError">{formik.errors.password}</span> : "" }
             </label>
             <label className="label">
                 <img className="label__icon" src={lockIcon} alt="haslo" />
@@ -87,6 +104,7 @@ const RegisterForm = () => {
                        value={formik.values.repeatPassword}
                        onChange={formik.handleChange}
                        placeholder="Powtórz hasło" />
+                {formik.errors.repeatPassword && formik.touched.repeatPassword ? <span className="formError">{formik.errors.repeatPassword}</span> : "" }
             </label>
         </section>
         <section className="form__inner">
@@ -113,8 +131,8 @@ const RegisterForm = () => {
             <label className="label">
                 <img className="label__icon" src={locationIcon} alt="ulica" />
                 <input className="input"
-                       name="street"
-                       value={formik.values.street}
+                       name="address"
+                       value={formik.values.address}
                        onChange={formik.handleChange}
                        placeholder="Ulica i nr domu/lokalu" />
             </label>
@@ -126,6 +144,7 @@ const RegisterForm = () => {
                            value={formik.values.postalCode}
                            onChange={formik.handleChange}
                            placeholder="Kod pocztowy" />
+                    {formik.errors.postalCode && formik.touched.postalCode ? <span className="formError">{formik.errors.postalCode}</span> : "" }
                 </label>
                 <label className="label">
                     <img className="label__icon" src={locationIcon} alt="miasto" />
@@ -169,8 +188,8 @@ const RegisterForm = () => {
             <label className="label">
                 <img className="label__icon" src={locationIcon} alt="ulica" />
                 <input className="input"
-                       name="companyStreet"
-                       value={formik.values.companyStreet}
+                       name="companyAddress"
+                       value={formik.values.companyAddress}
                        onChange={formik.handleChange}
                        placeholder="Ulica i nr domu/lokalu" />
             </label>

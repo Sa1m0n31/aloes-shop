@@ -89,17 +89,17 @@ con.connect((err) => {
 
     /* GET ALL SHIPPING METHODS */
     router.get("/get-all-shipping-methods", (request, response) => {
-        con.query(`SELECT sm.id, sm.name, sm.price, sm.delivery_time, i.file_path as img_path FROM shipping_methods sm LEFT OUTER JOIN images i ON sm.image = i.id`, (err, res) => {
-            let result, shippingMethods = 0;
-           if(err) result = 0;
-           else {
-               result = 1;
-               shippingMethods = res;
+        con.query(`SELECT id, name, price FROM shipping_methods`, (err, res) => {
+           if(err) {
+               response.send({
+                   result: 0
+               })
            }
-           response.send({
-               result,
-               shippingMethods
-           });
+           else {
+               response.send({
+                   result: res
+               })
+           }
         });
     });
 

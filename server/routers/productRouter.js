@@ -352,7 +352,7 @@ con.connect(err => {
 
    /* GET ALL PRODUCTS */
    router.get("/get-all-products", (request, response) => {
-      const query = 'SELECT p.id, p.name, p.subtitle, i.file_path as image, p.price, p.date, p.stock, COALESCE(c.name, "Brak") as category_name, p.hidden FROM products p ' +
+      const query = 'SELECT p.id, p.name, p.subtitle, i.file_path as image, p.price, p.discount, p.date, p.stock, COALESCE(c.name, "Brak") as category_name, p.hidden FROM products p ' +
       'LEFT OUTER JOIN product_categories pc ON pc.product_id = p.id ' +
           'LEFT OUTER JOIN categories c ON c.id = pc.category_id ' +
       'LEFT OUTER JOIN images i ON p.main_image = i.id GROUP BY p.id ORDER BY p.date DESC';

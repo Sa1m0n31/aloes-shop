@@ -1,12 +1,15 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import SectionHeader from "./SectionHeader";
 import exampleImg1 from "../static/img/example1.png";
-import {getDiscounts, getRecommendations} from "../helpers/productFunctions";
+import {getDiscounts, getRecommendations, showAddedToCartModal} from "../helpers/productFunctions";
 import convertToURL from "../helpers/convertToURL";
 import settings from "../helpers/settings";
+import {CartContext} from "../App";
 
 const CrossSells = () => {
     const [products, setProducts] = useState([]);
+
+    const { addToCart } = useContext(CartContext);
 
     useEffect(() => {
         getRecommendations()
@@ -14,6 +17,12 @@ const CrossSells = () => {
                 setProducts(res?.data?.result);
             });
     }, []);
+
+    const addProductToCart = (e, id, title, amount, img, price) => {
+        e.preventDefault();
+        addToCart(id, title, amount, img, price);
+        showAddedToCartModal();
+    }
 
     return <aside className="crossSells">
         <SectionHeader title="Polecane produkty" />
@@ -38,7 +47,7 @@ const CrossSells = () => {
                         </span>
                     </section>
 
-                    <button className="addToCartBtn">
+                    <button className="addToCartBtn" onClick={(e) => { addProductToCart(e, item.id, item.name, 1, item.file_path, item.discount ? item.discount : item.price); }}>
                         Dodaj do koszyka
                     </button>
                 </a>

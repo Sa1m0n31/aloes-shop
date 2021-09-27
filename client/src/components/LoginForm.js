@@ -1,12 +1,31 @@
 import React, {useState} from 'react'
 import lockIcon from '../static/img/lock.svg'
 import mailIcon from '../static/img/mail.svg'
+import {loginUser} from "../helpers/userFunctions";
 
 const LoginForm = () => {
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
+    const [auth, setAuth] = useState(-1);
 
-    return <form className="loginForm">
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        loginUser(login, password)
+            .then(res => {
+                if(res.data?.result) {
+                    setAuth(1);
+                    localStorage.setItem('sec-sessionKey', res.data.sessionKey);
+                    localStorage.setItem('sec-user-id', res.data.id);
+                    window.location = "/moje-konto"
+                }
+                else {
+                    setAuth(0);
+                }
+            });
+    }
+
+    return <form className="loginForm" onSubmit={(e) => { handleSubmit(e); }}>
         <section className="form__inner">
             <label className="label">
                 <img className="label__icon" src={mailIcon} alt="adres-email" />
@@ -29,6 +48,8 @@ const LoginForm = () => {
         <button className="button button--submit">
             Zaloguj się
         </button>
+
+        {auth === 0 ? <span className="error error--login">Nie znaleziono konta o podanym haśle i adresie email</span> : "" }
     </form>
 }
 
