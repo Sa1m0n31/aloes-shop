@@ -87,6 +87,14 @@
     .footer__col:nth-of-type(4) {
         width: 30%;
     }
+
+    .myAccount__section--orders {
+        width: 55%;
+    }
+
+    .myAccount__section--data {
+        width: 44%;
+    }
 }
 
 @media(max-width: 996px) {
@@ -180,6 +188,11 @@
 
     .cart__item__sum > * {
         font-size: 21px !important;
+    }
+
+    .myAccount__section--orders,
+    .myAccount__section--data {
+        width: 100%;
     }
 }
 
@@ -455,5 +468,10 @@
     .button--addedToCart {
         width: 80%;
         margin-top: 15px;
+    }
+
+    .singleOrder__item {
+        width: 48%;
+        margin-bottom: 30px;
     }
 }

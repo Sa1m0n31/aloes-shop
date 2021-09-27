@@ -14,10 +14,11 @@ import {addNewOrder, addSell, checkCouponCode} from "../admin/helpers/orderFunct
 import Modal from 'react-modal';
 import GeolocationWidget from "./GeolocationWidget";
 import closeImg from '../static/img/close.png'
-import {addUser} from "../helpers/userFunctions";
+import {addUser, getUserData} from "../helpers/userFunctions";
 import settings from "../admin/helpers/settings";
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
+import auth from "../admin/helpers/auth";
 
 const ShippingAndPaymentForm = () => {
     const [vat, setVat] = useState(false);
@@ -84,6 +85,32 @@ const ShippingAndPaymentForm = () => {
                 setShippingMethods(res?.data?.result);
             });
 
+        /* Check if login - then set form data */
+        auth(localStorage.getItem('sec-sessionKey'))
+            .then(res => {
+                if(res.data?.result) {
+                    getUserData(parseInt(localStorage.getItem('sec-user-id')))
+                        .then(res => {
+                            const result = res.data?.result;
+                            if(result) {
+                                setIsAuth(true);
+                                formik.setFieldValue('email', result.email);
+                                formik.setFieldValue('fullName', result.full_name);
+                                formik.setFieldValue('phoneNumber', result.phone_number);
+                                formik.setFieldValue('city', result.city);
+                                formik.setFieldValue('postalCode', result.postal_code);
+                                formik.setFieldValue('address', result.address);
+
+                                formik.setFieldValue('companyName', result.company_name);
+                                formik.setFieldValue('nip', result.company_nip);
+                                formik.setFieldValue('companyAddress', result.company_address);
+                                formik.setFieldValue('companyPostalCode', result.company_postal_code);
+                                formik.setFieldValue('companyCity', result.company_city);
+                            }
+                        });
+                }
+            });
+
         /* InPost listener */
         document.addEventListener("click", () => {
             setInPostAddress(sessionStorage.getItem('paczkomat-adres'));
@@ -144,6 +171,7 @@ const ShippingAndPaymentForm = () => {
             check: false,
             marketing: false
         },
+        enableReinitialize: true,
         validationSchema,
         onSubmit: ({email, password, fullName, phoneNumber, postalCode, city, street, address, companyName, nip, companyAddress, companyPostalCode, companyCity}) => {
             console.log("submit");

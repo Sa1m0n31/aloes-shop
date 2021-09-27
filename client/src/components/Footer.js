@@ -2,10 +2,12 @@ import React, {useEffect, useState} from 'react'
 import mailIcon from '../static/img/mail.svg'
 import {getAllCategories} from "../helpers/categoryFunctions";
 import {addEmailToNewsletter} from "../helpers/newsletterFunctions";
+import auth from "../admin/helpers/auth";
 
 const Footer = () => {
     const [email, setEmail] = useState("");
     const [categories, setCategories] = useState([]);
+    const [loggedIn, setLoggedIn] = useState(false);
     const [newsletterResponse, setNewsletterResponse] = useState(0);
 
     useEffect(() => {
@@ -13,6 +15,12 @@ const Footer = () => {
             .then(res => {
                 if(res.data.result) setCategories(res.data.result);
             })
+
+        /* Authorization */
+        auth(localStorage.getItem('sec-sessionKey'))
+            .then(res => {
+                if(res.data?.result) setLoggedIn(true);
+            });
     }, []);
 
     const isEmail = (email) => {
@@ -91,11 +99,11 @@ const Footer = () => {
                         Panel klienta
                     </a>
                 </li>
-                <li className="footer__col__list__item">
+                {! loggedIn ? <li className="footer__col__list__item">
                     <a className="footer__col__list__link" href="/zarejestruj-sie">
                         Rejestracja
                     </a>
-                </li>
+                </li> : ""}
                 <li className="footer__col__list__item">
                     <a className="footer__col__list__link" href="/koszyk">
                         Mój koszyk

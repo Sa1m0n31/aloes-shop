@@ -30,13 +30,11 @@ con.connect((err) => {
 
        con.query(query, values, (err, res) => {
            if(err) {
-               console.log(err);
                response.send({
                    result: -1
                });
            }
            else {
-               console.log(res);
                response.send({
                    result: res[0]
                });
@@ -46,9 +44,9 @@ con.connect((err) => {
 
     /* UPDATE USER DATA */
     router.post("/update-user", (request, response) => {
-       const { id, firstName, lastName, phoneNumber, postalCode, city, street, building, flat } = request.body;
-       const values = [firstName, lastName, phoneNumber, postalCode, city, street, building, flat, id];
-       const query = 'UPDATE users SET first_name = ?, last_name = ?, phone_number = ?, postal_code = ?, city = ?, street = ?, building = ?, flat = ? WHERE id = ?';
+       const { id, fullName, phoneNumber, city, postalCode, address} = request.body;
+       const values = [fullName, phoneNumber, postalCode, city, address, id];
+       const query = 'UPDATE users SET full_name = ?, phone_number = ?, postal_code = ?, city = ?, address = ? WHERE id = ?';
        con.query(query, values, (err, res) => {
            if(res) {
                response.send({
@@ -61,6 +59,26 @@ con.connect((err) => {
                });
            }
        });
+    });
+
+    router.post("/update-company-data", (request, response) => {
+        const { id, companyName, nip, companyAddress, companyPostalCode, companyCity } = request.body;
+
+        const values = [companyName, nip, companyAddress, companyPostalCode, companyCity, id];
+        const query = 'UPDATE users SET company_name = ?, company_nip = ?, company_address = ?, company_postal_code = ?, company_city = ? WHERE id = ?';
+
+        con.query(query, values, (err, res) => {
+            if(res) {
+                response.send({
+                    result: 1
+                });
+            }
+            else {
+                response.send({
+                    result: 0
+                });
+            }
+        })
     });
 
     /* DELETE ADMIN */
@@ -153,6 +171,8 @@ con.connect((err) => {
         const values = [id];
         const query = 'SELECT * FROM orders o JOIN sells s ON o.id = s.order_id WHERE o.user = ? GROUP BY o.id';
         con.query(query, values, (err, res) => {
+            console.log(err);
+            console.log(res);
             if(res) {
                 response.send({
                     result: res

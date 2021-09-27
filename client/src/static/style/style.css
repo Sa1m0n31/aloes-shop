@@ -1263,3 +1263,92 @@ a {
 .ReactModal__Overlay {
     background: rgba(0, 0, 0, .5) !important;
 }
+
+/* My account */
+.myAccount {
+    width: var(--siteWidth);
+    margin: 50px auto;
+}
+
+.myAccount__inner {
+    margin: 30px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.myAccount__section--orders {
+    width: 60%;
+}
+
+.myAccount__section--data {
+    width: 37%;
+}
+
+.myAccount__section .form__inner__header {
+    max-width: 100%;
+}
+
+.form__inner__header {
+    position: relative;
+}
+
+.button--myAccount {
+    padding: 2px 15px;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.myAccount .label, .myAccount .form__flex {
+    max-width: 100%;
+}
+
+.myAccount .form__flex .label:last-of-type {
+    margin-right: 0;
+}
+
+.myAccount .form__inner {
+    padding: 15px 30px;
+}
+
+.changePasswordResult {
+    text-align: center;
+    margin: 50px auto;
+    display: block;
+    font-size: 15px;
+}
+
+.button--logout {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 3px 10px;
+}
+
+.singleOrder {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    margin: 15px 0;
+    border-bottom: 1px solid #BBBBBB;
+}
+
+.singleOrder__item__key {
+    font-size: 14px;
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: 400;
+}
+
+.singleOrder__item__value {
+    font-size: 14px;
+    text-align: center;
+}
+
+.noOrdersHeader {
+    margin: 40px 0;
+}
