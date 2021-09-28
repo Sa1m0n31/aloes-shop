@@ -478,6 +478,15 @@
         width: 48%;
         margin-bottom: 30px;
     }
+
+    .homepage .productsRow__main__item {
+        margin-bottom: 40px;
+    }
+
+    .single__header__price__crossed {
+        display: block;
+        padding-right: 0;
+    }
 }
 
 @media(max-width: 576px) {

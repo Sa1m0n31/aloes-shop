@@ -976,6 +976,8 @@ a {
 .single__header__price {
     color: #E20000;
     font-size: 32px;
+    flex-basis: 60%;
+    text-align: right;
 }
 
 .single__info {
