@@ -1,27 +1,23 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import SiteHeader from "../components/SiteHeader";
 import SiteHeaderMobile from "../components/SiteHeaderMobile";
 import SiteMenu from "../components/SiteMenu";
-import HeroSection from "../components/HeroSection";
-import ProductsRow from "../components/ProductsRow";
+import AddedToCart from "../components/AddedToCart";
+import SectionHeader from "../components/SectionHeader";
+import searchIcon from "../static/img/search.svg";
+import settings from "../admin/helpers/settings";
+import convertToURL from "../helpers/convertToURL";
 import AboutProducent from "../components/AboutProducent";
+import CrossSells from "../components/CrossSells";
 import IconsSection from "../components/IconsSection";
 import Footer from "../components/Footer";
-import SectionHeader from "../components/SectionHeader";
-import exampleImg1 from "../static/img/example1.png";
-import CrossSells from "../components/CrossSells";
+import {CartContext} from "../App";
 import {getAllCategories, getCategoryBySlug} from "../admin/helpers/categoriesFunctions";
-import settings from "../admin/helpers/settings";
-import axios from "axios";
 import {getProductsByCategory, showAddedToCartModal} from "../helpers/productFunctions";
 import {getAllProducts} from "../admin/helpers/productFunctions";
-import { CartContext } from '../App'
-import AddedToCart from "../components/AddedToCart";
-import convertToURL from "../helpers/convertToURL";
 import {productSearchForUser} from "../admin/helpers/search";
-import searchIcon from "../static/img/search.svg";
 
-const ShopPage = () => {
+const SearchResult = () => {
     const [filter, setFilter] = useState(-1);
     const [search, setSearch] = useState("");
 
@@ -34,43 +30,19 @@ const ShopPage = () => {
     const { addToCart } = useContext(CartContext);
 
     useEffect(() => {
-        /* Get categories */
-        getAllCategories()
+        /* Set search value */
+        const params = new URLSearchParams(window.location.search);
+        setSearch(params.get('search'));
+
+        /* Get all products */
+        getAllProducts()
             .then(res => {
                 if(res?.data?.result) {
-                    setCategories(res.data.result);
-                }
-            });
-
-        /* Get current category */
-        const urlPathArray = window.location.pathname.split("/");
-        const categorySlug = urlPathArray[urlPathArray.length-1];
-            getCategoryBySlug(categorySlug)
-            .then(res => {
-                if(res.data.result[0]) {
-                    /* Category page => Get products of current category */
-                    setCurrentCategory(res.data.result[0]?.name);
-                    getProductsByCategory(res.data.result[0]?.id)
-                        .then(res => {
-                            if(res?.data?.result) {
-                                setProducts(res.data.result);
-                                setFilteredProducts(res.data.result);
-                                setLoaded(true);
-                            }
-                        });
-                }
-                else {
-                    /* Shop page => Get all products */
-                    getAllProducts()
-                        .then(res => {
-                            if(res?.data?.result) {
-                                setProducts(res.data.result);
-                                setFilteredProducts(res.data.result);
-                                setLoaded(true);
-                            }
-                        });
-                }
-            });
+                    setProducts(res.data.result);
+                    setFilteredProducts(res.data.result);
+                    initialSearch(res.data.result, params.get('search'));
+                    setLoaded(true);
+                }});
     }, []);
 
     const sortArray = (products, lowest) => {
@@ -91,7 +63,6 @@ const ShopPage = () => {
     }
 
     const sortProducts = (lowest) => {
-        console.log(sortArray(products, lowest));
         setFilteredProducts(sortArray(products, lowest));
     }
 
@@ -101,20 +72,22 @@ const ShopPage = () => {
         showAddedToCartModal();
     }
 
-    const searchProducts = (e) => {
+    const searchProducts = (e = null) => {
         setSearch(e.target.value);
         setFilteredProducts(productSearchForUser(products, e.target.value));
     }
 
-    return <div className="container shop">
+    const initialSearch = (initialProducts, initialStr) => {
+        setFilteredProducts(productSearchForUser(initialProducts, initialStr));
+    }
+
+    return <div className="container search">
         <SiteHeader />
         <SiteHeaderMobile />
         <SiteMenu />
 
-        <AddedToCart />
-
         <main className="shop__inner">
-            <SectionHeader title={currentCategory} />
+            <SectionHeader title="Wyniki wyszukiwania" />
             <header className="shopFilters">
                 <section>
                     <h3 className="shopFilters__header">
@@ -153,7 +126,7 @@ const ShopPage = () => {
                 </section>
             </header>
             <main className="productsRow__main">
-                {filteredProducts.map((item, index) => {
+                {filteredProducts?.length ? filteredProducts.map((item, index) => {
                     return <a key={index} href={`${settings.homepage}/produkt/${convertToURL(item.name)}`} className={index !== 4 && index !== 3 ? "productsRow__main__item" : (index !== 3 ? "productsRow__main__item productsRow__main__item--1200" : "productsRow__main__item productsRow__main__item--996")}>
                         <figure className="productsRow__item__imgWrapper">
                             <img className="productsRow__item__img" src={settings.API_URL + "/image?url=/media/" + item.image} alt={item.title} />
@@ -180,7 +153,14 @@ const ShopPage = () => {
                             Dodaj do koszyka
                         </button>
                     </a>
-                })}
+                }) : <div className="emptySearch">
+                    <h3 className="noProducts">
+                        Nic nie znaleziono...
+                    </h3>
+                    <a href="/sklep" className="button button--emptySearch">
+                        Wróć do sklepu
+                    </a>
+                </div>}
             </main>
 
             <AboutProducent shop={true} />
@@ -190,7 +170,9 @@ const ShopPage = () => {
 
         <IconsSection />
         <Footer />
+
+        <AddedToCart />
     </div>
 }
 
-export default ShopPage;
+export default SearchResult;

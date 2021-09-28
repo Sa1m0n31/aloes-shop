@@ -1,10 +1,21 @@
-import React, { useRef } from 'react'
+import React, {useRef, useEffect, useState} from 'react'
 import ReactSiema from 'react-siema';
 import arrow from '../static/img/right-arrow.svg';
 import example from '../static/img/baner.png';
+import {getBanners} from "../helpers/homepageFunctions";
+import settings from "../admin/helpers/settings";
 
 const HeroSection = () => {
     let slider = useRef({currentSlide: 0});
+
+    const [banners, setBanners] = useState({});
+
+    useEffect(() => {
+        getBanners()
+            .then(res => {
+                setBanners(res?.data?.result);
+            });
+    }, []);
 
     const nextSlide = () => {
         slider.next();
@@ -22,14 +33,14 @@ const HeroSection = () => {
                     ref={siema => { slider = siema; }}
                     loop={true}
         >
-            <a className="banner">
-                <img className="banner__img" src={example} alt="baner" />
+            <a className="banner" href={banners.slider_link_1}>
+                <img className="banner__img" src={`${settings.API_URL}/image?url=/media/homepage/${banners.slider_image_1}`} alt="baner" />
             </a>
-            <a className="banner">
-                <img className="banner__img" src={example} alt="baner" />
+            <a className="banner" href={banners.slider_link_2}>
+                <img className="banner__img" src={`${settings.API_URL}/image?url=/media/homepage/${banners.slider_image_2}`} alt="baner" />
             </a>
-            <a className="banner">
-                <img className="banner__img" src={example} alt="baner" />
+            <a className="banner" href={banners.slider_link_3}>
+                <img className="banner__img" src={`${settings.API_URL}/image?url=/media/homepage/${banners.slider_image_3}`} alt="baner" />
             </a>
         </ReactSiema>
         <button className="hero__btn hero__btn--next" onClick={() => { nextSlide(); }}>

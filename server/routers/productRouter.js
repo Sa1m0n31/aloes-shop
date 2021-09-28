@@ -95,12 +95,12 @@ con.connect(err => {
                                        const values = [mainImageId, productId];
                                        const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                                        con.query(query, values, (err, res) => {
-                                          if(res) response.redirect("http://localhost:5000/panel/dodaj-produkt?add=1");
-                                          else response.redirect("http://localhost:5000/panel/dodaj-produkt?add=0");
+                                          if(res) response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=1");
+                                          else response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
                                        });
                                     }
                                     else {
-                                       response.redirect("http://localhost:5000/panel/dodaj-produkt?add=0");
+                                       response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
                                     }
                                  }
                               })
@@ -124,12 +124,12 @@ con.connect(err => {
                                  const values = [mainImageId, productId];
                                  const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                                  con.query(query, values, (err, res) => {
-                                    if(res) response.redirect("http://localhost:5000/panel/dodaj-produkt?add=1");
-                                    else response.redirect("http://localhost:5000/panel/dodaj-produkt?add=0");
+                                    if(res) response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=1");
+                                    else response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
                                  });
                               }
                               else {
-                                 response.redirect("http://localhost:5000/panel/dodaj-produkt?add=0");
+                                 response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
                               }
                            }
                         })
@@ -138,7 +138,7 @@ con.connect(err => {
                });
             }
             else {
-               response.redirect("http://localhost:5000/panel/dodaj-produkt?add=0");
+               response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
             }
          });
       });
@@ -189,7 +189,7 @@ con.connect(err => {
          con.query(query, values, (err, res) => {
             if(res) {
                /* HERE WE HAVE TO CHECK WHETHER WE HAVE TO SEND NOTIFICATION TO CLIENT */
-               got.post("http://localhost:5000/notification/check-notifications", {
+               got.post("https://aloes.skylo-test3.pl/notification/check-notifications", {
                   json: { productId: id },
                   responseType: "json"
                })
@@ -226,12 +226,12 @@ con.connect(err => {
                                           const values = [mainImageId, id];
                                           const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                                           con.query(query, values, (err, res) => {
-                                             if(res) response.redirect("http://localhost:5000/panel/dodaj-produkt?add=1");
-                                             else response.redirect("http://localhost:5000/panel/dodaj-produkt?add=0");
+                                             if(res) response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=1");
+                                             else response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
                                           });
                                        }
                                        else {
-                                          response.redirect("http://localhost:5000/panel/dodaj-produkt?add=0");
+                                          response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
                                        }
                                     }
                                  })
@@ -242,8 +242,8 @@ con.connect(err => {
                               const values = [mainImageId, id];
                               const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                               con.query(query, values, (err, res) => {
-                                 if(res) response.redirect("http://localhost:5000/panel/dodaj-produkt?add=1");
-                                 else response.redirect("http://localhost:5000/panel/dodaj-produkt?add=0");
+                                 if(res) response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=1");
+                                 else response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
                               });
                            }
                         }
@@ -268,12 +268,12 @@ con.connect(err => {
                                        const values = [mainImageId, id];
                                        const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                                        con.query(query, values, (err, res) => {
-                                          if(res) response.redirect("http://localhost:5000/panel/dodaj-produkt?add=1");
-                                          else response.redirect("http://localhost:5000/panel/dodaj-produkt?add=0");
+                                          if(res) response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=1");
+                                          else response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
                                        });
                                     }
                                     else {
-                                       response.redirect("http://localhost:5000/panel/dodaj-produkt?add=0");
+                                       response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
                                     }
                                  }
                               })
@@ -284,8 +284,8 @@ con.connect(err => {
                            const values = [mainImageId, id];
                            const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                            con.query(query, values, (err, res) => {
-                              if(res) response.redirect("http://localhost:5000/panel/dodaj-produkt?add=1");
-                              else response.redirect("http://localhost:5000/panel/dodaj-produkt?add=0");
+                              if(res) response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=1");
+                              else response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
                            });
                         }
                      }
@@ -293,7 +293,7 @@ con.connect(err => {
                });
             }
             else {
-               response.redirect("http://localhost:5000/panel/dodaj-produkt?add=0");
+               response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
             }
          });
       });
@@ -302,7 +302,7 @@ con.connect(err => {
 
    /* GET RECOMMENDATIONS */
    router.get('/get-recommendations', (request, response) => {
-      const query = 'SELECT * FROM products p JOIN images i ON p.main_image = i.id WHERE recommendation = 1 LIMIT 6';
+      const query = 'SELECT *, p.id as product_id FROM products p JOIN images i ON p.main_image = i.id WHERE recommendation = 1 LIMIT 6';
       con.query(query, (err, res) => {
          if(res) {
             response.send({
@@ -319,7 +319,7 @@ con.connect(err => {
 
    /* GET DISCOUNTS */
    router.get('/get-discounts', (request, response) => {
-      const query = 'SELECT * FROM products p JOIN images i ON p.main_image = i.id WHERE discount IS NOT NULL and discount != 0 LIMIT 6';
+      const query = 'SELECT *, p.id as product_id FROM products p JOIN images i ON p.main_image = i.id WHERE discount IS NOT NULL and discount != 0 LIMIT 6';
       con.query(query, (err, res) => {
          if(res) {
             response.send({
@@ -352,7 +352,7 @@ con.connect(err => {
 
    /* GET ALL PRODUCTS */
    router.get("/get-all-products", (request, response) => {
-      const query = 'SELECT p.id, p.name, p.subtitle, i.file_path as image, p.price, p.discount, p.date, p.stock, COALESCE(c.name, "Brak") as category_name, p.hidden FROM products p ' +
+      const query = 'SELECT p.id as product_id, p.name, p.subtitle, i.file_path as image, p.price, p.discount, p.date, p.stock, COALESCE(c.name, "Brak") as category_name, p.hidden FROM products p ' +
       'LEFT OUTER JOIN product_categories pc ON pc.product_id = p.id ' +
           'LEFT OUTER JOIN categories c ON c.id = pc.category_id ' +
       'LEFT OUTER JOIN images i ON p.main_image = i.id GROUP BY p.id ORDER BY p.date DESC';
@@ -400,8 +400,6 @@ con.connect(err => {
           'FROM products p LEFT OUTER JOIN images i ON i.id = p.main_image ' +
           'WHERE REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LOWER(SPLIT_STR(p.name, "/", 1)), "ł", "l"), "ę", "e"), "ą", "a"), "ć", "c"), "ń", "n"), "ó", "o"), "ś", "s"), "ź", "z"), "ż", "z") = ?';
       con.query(query, values, (err, res) => {
-         console.log(res);
-         console.log(err);
          response.send({
             result: res
          });
@@ -493,7 +491,7 @@ con.connect(err => {
    router.post("/get-products-by-category", (request, response) => {
       const { id } = request.body;
       const values = [id];
-      const query = 'SELECT *, i.file_path as image FROM products p JOIN images i ON p.main_image = i.id JOIN product_categories pc ON pc.product_id = p.id WHERE pc.category_id = ?';
+      const query = 'SELECT *, p.id as product_id, i.file_path as image FROM products p JOIN images i ON p.main_image = i.id JOIN product_categories pc ON pc.product_id = p.id WHERE pc.category_id = ?';
       con.query(query, values, (err, res) => {
          if(res) {
             response.send({

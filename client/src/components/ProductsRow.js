@@ -13,14 +13,19 @@ const ProductsRow = ({title, type}) => {
         if(type === "Recoms") {
             getRecommendations()
                 .then(res => {
+                    console.log(res.data.result);
                     setProducts(res?.data?.result);
                 })
         }
         else if(type === "Discounts") {
             getDiscounts()
                 .then(res => {
+                    console.log(res.data.result);
                     setProducts(res?.data?.result);
                 })
+        }
+        else {
+            console.log("else");
         }
     }, []);
 
@@ -35,9 +40,12 @@ const ProductsRow = ({title, type}) => {
 
         <main className="productsRow__main">
             {products.map((item, index) => {
-                return <a href={`http://localhost:3000/produkt/${convertToURL(item.name)}`} className={index !== 4 && index !== 3 ? "productsRow__main__item" : (index !== 3 ? "productsRow__main__item productsRow__main__item--1200" : "productsRow__main__item productsRow__main__item--996")}>
+                return <a href={`https://aloes.skylo-test3.pl/produkt/${convertToURL(item.name)}`} className={index !== 4 && index !== 3 ? "productsRow__main__item" : (index !== 3 ? "productsRow__main__item productsRow__main__item--1200" : "productsRow__main__item productsRow__main__item--996")}>
                     <figure className="productsRow__item__imgWrapper">
                         <img className="productsRow__item__img" src={`${settings.API_URL}/image?url=/media/${item.file_path}`} alt={item.name} />
+                        {item.discount ? <span className="product__discount">
+                            Promocja
+                        </span> : ""}
                     </figure>
                     <h3 className="productsRow__item__title">
                         {item.name}
@@ -54,7 +62,7 @@ const ProductsRow = ({title, type}) => {
                         </span>
                     </section>
 
-                    <button className="addToCartBtn" onClick={(e) => { addProductToCart(e, item.id, item.name, 1, item.file_path, item.discount ? item.discount : item.price); }}>
+                    <button className="addToCartBtn" onClick={(e) => { addProductToCart(e, item.product_id, item.name, 1, item.file_path, item.discount ? item.discount : item.price); }}>
                         Dodaj do koszyka
                     </button>
                 </a>

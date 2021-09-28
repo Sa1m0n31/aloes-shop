@@ -1,11 +1,31 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import SiteHeader from "../components/SiteHeader";
 import SiteHeaderMobile from "../components/SiteHeaderMobile";
 import SiteMenu from "../components/SiteMenu";
 import Footer from "../components/Footer";
 import SectionHeader from "../components/SectionHeader";
+import {getPaymentStatus} from "../admin/helpers/paymentFunctions";
+import {updatePaymentStatus} from "../admin/helpers/orderFunctions";
 
 const TyPage = () => {
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const paymentId = params.get('paymentId');
+
+        if(paymentId) {
+            getPaymentStatus(paymentId)
+                .then(res => {
+                    const result = res?.data?.result;
+                    if(result) {
+                        updatePaymentStatus(paymentId, "opłacone");
+                    }
+                });
+        }
+        else {
+            window.location = "/";
+        }
+    }, []);
+
     return <div className="container">
         <SiteHeader />
         <SiteHeaderMobile />

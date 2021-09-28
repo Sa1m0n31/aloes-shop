@@ -20,7 +20,6 @@ const OrderDetailsContent = () => {
     const [modal, setModal] = useState(false);
     const [deleteMsg, setDeleteMsg] = useState("");
     const [comment, setComment] = useState("");
-    const [letterNumber, setLetterNumber] = useState("");
     const [orderStatus, setOrderStatus] = useState("");
     const [orderUpdated, setOrderUpdated] = useState(-1);
 
@@ -36,11 +35,10 @@ const OrderDetailsContent = () => {
             .then(res => {
                if(res?.data?.result?.length) {
                    setCart(res.data.result);
+                   console.log(res.data.result);
                    setOrderStatus(res.data.result[0].order_status);
-                   setLetterNumber(res.data.result[0].letter_number);
                    setComment(res.data.result[0].order_comment);
                }
-               //setSum(calculateCartSum(res.data.result));
                calculateCartSum();
             });
 
@@ -83,8 +81,7 @@ const OrderDetailsContent = () => {
     const changeOrderStatus = () => {
         axios.post(`${settings.API_URL}/order/change-order-status`, {
             id,
-            orderStatus,
-            letterNumber
+            orderStatus
         })
             .then(res => {
                 if(res.data.result) {
@@ -187,10 +184,10 @@ const OrderDetailsContent = () => {
                     </h2>
                     {cart?.length ?  <main className="panelContent__clientData__content">
                         <h3 className="panelContent__data w-50">
-                            {cart[0].first_name}
+                            {cart[0]?.full_name?.split(" ")[0]}
                         </h3>
                         <h3 className="panelContent__data w-50">
-                            {cart[0].last_name}
+                            {cart[0]?.full_name?.split(" ")[1]}
                         </h3>
                         <h3 className="panelContent__data w-70">
                             {cart[0].email}
@@ -222,7 +219,7 @@ const OrderDetailsContent = () => {
                     <h2 className="panelContent__header--smaller">
                         Sposób dostawy: <b>{cart[0].shipping}</b>
                     </h2>
-                    <h2 className="panelContent__header--smaller mt-4">
+                    <h2 className="panelContent__header--smaller mt-3">
                         Płatność: <b>{cart[0].payment}</b>
                     </h2>
 
@@ -239,15 +236,10 @@ const OrderDetailsContent = () => {
                             Dane do faktury
                         </h4>
                         {cart[0].company_name}<br/>
-                        {cart[0].nip}
+                        {cart[0].nip}<br/>
+                        {cart[0].company_address}<br/>
+                        {cart[0].company_postal_code} {cart[0].company_city}
                     </address> : "" }
-
-                    <h2 className="panelContent__header--smaller mt-3">
-                        Numer listu przewozowego:
-                        <input className="panelContent__input panelContent__input--letterNumber"
-                               value={letterNumber}
-                               onChange={(e) => { setLetterNumber(e.target.value); }} />
-                    </h2>
 
                     <h2 className="panelContent__header--smaller mt-3">
                         Status zamówienia:

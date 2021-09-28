@@ -147,7 +147,7 @@ const PanelProductsContent = () => {
                             </h4>
                             <div className="panelContent__column__value panelContent__column__value--buttons">
                                 <button className="panelContent__column__btn">
-                                    <a className="panelContent__column__link" href={"/panel/dodaj-produkt?id=" + item.id}>
+                                    <a className="panelContent__column__link" href={"/panel/dodaj-produkt?id=" + item.product_id}>
                                         <img className="panelContent__column__icon" src={exit} alt="przejdz" />
                                     </a>
                                 </button>

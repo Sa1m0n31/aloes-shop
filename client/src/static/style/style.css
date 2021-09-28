@@ -175,6 +175,16 @@ a {
     position: relative;
 }
 
+.banner {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+}
+
+.banner__img {
+    width: 100%;
+}
+
 .hero__btn {
     background: transparent;
     position: absolute;
@@ -301,6 +311,7 @@ a {
     border: 1px solid #BBBBBB;
     width: 100%;
     padding: 30px 10px;
+    position: relative;
 }
 
 .productsRow__item__img {
@@ -683,11 +694,34 @@ a {
     margin: 20px auto;
     padding-bottom: 15px;
     border-bottom: 1px solid rgba(187, 187, 187, .5);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.filterSection--second {
+    margin-left: 30px;
+}
+
+.shop .label, .search .label {
+    margin: 0;
+    padding: 0 0 5px;
+    width: 240px;
+}
+
+.shopFilters__buttons--extraMargin {
+    margin: 25px 0 20px !important;
 }
 
 .shopFilters__header {
     font-weight: 400;
     font-size: 14px;
+}
+
+.shopFilters__buttons .searchForm__icon {
+    position: absolute;
+    right: 0;
+    top: 0;
 }
 
 .shopFilters__buttons {
@@ -760,6 +794,19 @@ a {
 
 .shop__inner {
     margin: 50px auto;
+}
+
+.button--emptySearch {
+    width: 300px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.emptySearch {
+
 }
 
 /* Added to cart */
@@ -1096,6 +1143,21 @@ a {
     margin: 40px auto;
 }
 
+.shippingAndPayment .label .input {
+    width: 80%;
+}
+
+.error {
+    color: #E20000;
+}
+
+.error--shippingAndPayment {
+    font-size: 13px;
+    display: block;
+    max-width: 500px;
+    margin: auto;
+}
+
 .shippingAndPayment__form {
     display: flex;
     justify-content: flex-start;
@@ -1193,6 +1255,10 @@ a {
 .page {
     width: var(--siteWidth);
     margin: 50px auto;
+}
+
+.page article {
+    margin: 50px 0;
 }
 
 .label {
@@ -1351,4 +1417,19 @@ a {
 
 .noOrdersHeader {
     margin: 40px 0;
+}
+
+.product__discount {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 30px;
+    background: #E20000;
+    color: #fff;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 13px;
 }

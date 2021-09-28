@@ -59,8 +59,8 @@ con.connect(function(err) {
                           else {
                               /* It's not an account, but send back already existed data - UPDATE */
                               const userId = res[0].id;
-                              const values = [fullName, city, postalCode, phoneNumber, email];
-                              const query = 'UPDATE users SET full_name = ?, city = ?, street = ?, building = ?, flat = ?, postal_code = ?, phone_number = ? WHERE email = ?';
+                              const values = [fullName, city, address, postalCode, phoneNumber, companyName, nip, companyAddress, companyPostalCode, companyCity, email];
+                              const query = 'UPDATE users SET full_name = ?, city = ?, address = ?, postal_code = ?, phone_number = ?, company_name = ?, company_nip = ?, company_address = ?, company_postal_code = ?, company_city = ? WHERE email = ?';
                               con.query(query, values, (err, res) => {
                                   response.send({
                                       result: 1,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import './static/style/admin.css'
 import './static/style/adminMobile.css'
 import './static/style/style.css'
@@ -34,6 +34,8 @@ import OrderDetails from "./admin/pages/OrderDetails";
 import {getProductById} from "./helpers/productFunctions";
 import Page from "./pages/Page";
 import AfterRegisterPage from "./pages/AfterRegisterPage";
+import {getPagesContent} from "./helpers/pagesFunctions";
+import SearchResult from "./pages/SearchResults";
 
 const CartContext = React.createContext(null);
 
@@ -42,6 +44,8 @@ function App() {
 
   const addToCart = (id, title, amount, img, price) => {
     const uuid = uuidv4();
+
+    console.log("Add product with id = " + id);
 
     let existedUuid, existedAmount = 0;
 
@@ -158,14 +162,17 @@ function App() {
     <Route path="/dziekujemy">
       <TyPage />
     </Route>
+    <Route path="/szukaj">
+      <SearchResult />
+    </Route>
     <Route path="/konto-zalozone">
       <AfterRegisterPage />
     </Route>
     <Route path="/regulamin">
-      <Page title="Regulamin" content={""} />
+      <Page title="Regulamin" content="terms" />
     </Route>
     <Route path="/polityka-prywatnosci">
-      <Page title="Polityka prywatności" content={""} />
+      <Page title="Polityka prywatności" content="policy" />
     </Route>
 
       {/* Admin routes */}

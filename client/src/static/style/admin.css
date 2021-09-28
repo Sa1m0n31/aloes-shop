@@ -7,7 +7,7 @@
     padding: 0;
 }
 
-h1, h2, h3, h4, h5, h6, p, li, input, button, a, label, span {
+h1, h2, h3, h4, h5, h6, p, li, input, button, a, label, span, address {
     font-family: 'Open sans', sans-serif;
 }
 
@@ -703,6 +703,7 @@ input[type=file] {
     text-align: center;
     text-transform: uppercase;
     color: #8c8f94;
+    margin: 0 auto 40px;
 }
 
 .panelContent__input__label--payment {
@@ -1295,4 +1296,12 @@ select {
     width: fit-content;
     width: -moz-max-content;
     margin: auto;
+}
+
+.mt-3 {
+    margin-top: 20px;
+}
+
+.infoHeader {
+    margin-top: 25px;
 }

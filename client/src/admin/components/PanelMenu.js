@@ -126,12 +126,12 @@ const PanelMenu = ({active, submenu}) => {
                             Metody wysyłki
                         </a>
                     </li>
-                    <li className="panelMenu__list__item">
-                        <a className="panelMenu__list__item__link" id={active === 6 ? "menuItem--active" : ""} href="/panel/platnosci">
-                            <img className="panelMenu__list__item__img" src={creditCart} alt="platnosci" />
-                            Płatności
-                        </a>
-                    </li>
+                    {/*<li className="panelMenu__list__item">*/}
+                    {/*    <a className="panelMenu__list__item__link" id={active === 6 ? "menuItem--active" : ""} href="/panel/platnosci">*/}
+                    {/*        <img className="panelMenu__list__item__img" src={creditCart} alt="platnosci" />*/}
+                    {/*        Płatności*/}
+                    {/*    </a>*/}
+                    {/*</li>*/}
                     <li className="panelMenu__list__item">
                         <a className="panelMenu__list__item__link" id={active === 7 ? "menuItem--active" : ""} href="/panel/ustawienia">
                             <img className="panelMenu__list__item__img" src={settingsImg} alt="ustawienia" />

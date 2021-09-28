@@ -12,6 +12,7 @@ import {getAllCategories} from "../helpers/categoryFunctions";
 
 const SiteHeader = () => {
     const [cartSum, setCartSum] = useState(0.00);
+    const [search, setSearch] = useState("");
 
     const mobileMenu = useRef(null);
     const mobileMenuList = useRef(null);
@@ -66,13 +67,16 @@ const SiteHeader = () => {
                     <img className="siteHeader__companyLink__img" src={logo} alt="forever-living" />
                 </a>
 
-                <form className="searchForm">
+                <form className="searchForm" method="GET" action="/szukaj">
                     <label className="label--search">
                         <input className="input input--search"
+                               name="search"
+                               value={search}
+                               onChange={(e) => { setSearch(e.target.value); }}
                                placeholder="Wyszukaj produkt..." />
-                        <button className="searchForm__btn">
+                        <a className="searchForm__btn" href={`/szukaj?search=${search}`}>
                             <img className="searchForm__icon" src={searchIcon} alt="wyszukaj" />
-                        </button>
+                        </a>
                     </label>
                 </form>
             </section>

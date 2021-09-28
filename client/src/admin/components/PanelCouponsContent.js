@@ -217,7 +217,7 @@ const PanelCouponsContent = () => {
                         </label>
                     </section>
 
-                    <label className="addProduct__label addProduct__label--frame">
+                    <label className="addProduct__label addProduct__label--frame mt-3">
                         <input className="addProduct__input"
                                name="discountValue"
                                value={discountValue}

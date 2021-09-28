@@ -33,6 +33,9 @@ app.get("/kategoria/*", (req, res) => {
 app.get("/sklep", (req, res) => {
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
+app.get("/sklep/*", (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
 app.get("/regulamin", (req, res) => {
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
@@ -79,6 +82,15 @@ app.get("/reklamacje", (req, res) => {
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 app.get("/zwroty", (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
+app.get("/zamowienie", (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
+app.get("/szukaj", (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
+app.get("/konto-zalozone", (req, res) => {
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 

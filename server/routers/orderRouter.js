@@ -34,7 +34,7 @@ const sendStatus3Email = (id, email, fullName, letterNumber, response = null) =>
 </head>
 <body>
 <main style="width: 100%;">
-    <img style="max-width: 100%; width: 800px; margin: 0;" src="http://localhost:5000/image?url=/media/notification/logo.jpg" alt="zamowienie-zostalo-zrealizowane" />
+    <img style="max-width: 100%; width: 800px; margin: 0;" src="https://aloes.skylo-test3.pl/image?url=/media/notification/logo.jpg" alt="zamowienie-zostalo-zrealizowane" />
     <table style="display: block; padding: 20px; max-width: 100%; width: 800px; background: #59545A; margin-top: -5px; color: #fff; font-weight: 300; font-family: 'Open Sans', sans-serif;">
         <thead>
             <tr>
@@ -142,7 +142,7 @@ const sendStatus2Email = (id, email, fullName, response = null) => {
 </head>
 <body>
 <main style="width: 100%;">
-    <img style="max-width: 100%; width: 800px; margin: 0;" src="http://localhost:5000/image?url=/media/notification/logo.jpg" alt="zamowienie-zostalo-zrealizowane" />
+    <img style="max-width: 100%; width: 800px; margin: 0;" src="https://aloes.skylo-test3.pl/image?url=/media/notification/logo.jpg" alt="zamowienie-zostalo-zrealizowane" />
     <table style="display: block; padding: 20px; max-width: 100%; width: 800px; background: #59545A; margin-top: -5px; color: #fff; font-weight: 300; font-family: 'Open Sans', sans-serif;">
         <thead>
             <tr>
@@ -280,8 +280,6 @@ con.connect(err => {
                 paymentStatus = "za pobraniem";
             }
 
-            console.log("add new order");
-
             let values = [paymentMethod, shippingMethod, city, address, postalCode, user, paymentStatus, comment, sessionId, companyName, nip, companyAddress, companyPostalCode, companyCity, amount, inPostAddress, inPostCode, inPostCity];
             const query = `INSERT INTO orders VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, 'złożone', CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
@@ -306,7 +304,7 @@ con.connect(err => {
         router.post("/change-payment-status", (request, response) => {
             const {id, status} = request.body;
             const values = [status, id];
-            const query = 'UPDATE orders SET payment_status = ? WHERE id = ?';
+            const query = 'UPDATE orders SET payment_status = ? WHERE przelewy24_id = ?';
             con.query(query, values, (err, res) => {
                 let result = 0;
                 if (res) result = 1;
@@ -316,43 +314,35 @@ con.connect(err => {
             });
         });
 
+        router.post("/change-payment-id", (request, response) => {
+           const { id, paymentId } = request.body;
+           const values = [paymentId, id];
+           const query = 'UPDATE orders SET przelewy24_id = ? WHERE id = ?';
+           con.query(query, values, (err, res) => {
+              if(res) {
+                  response.send({
+                      result: 1
+                  });
+              }
+              else {
+                  response.send({
+                      result: 0
+                  });
+              }
+           });
+        });
+
         /* CHANGE ORDER STATUS */
         router.post("/change-order-status", (request, response) => {
-            const {id, orderStatus, letterNumber} = request.body;
+            const {id, orderStatus} = request.body;
 
             /* Change order status in database */
-            const query = 'UPDATE orders SET order_status = ?, letter_number = ? WHERE id = ?';
-            const values = [orderStatus, letterNumber, id];
+            const query = 'UPDATE orders SET order_status = ? WHERE id = ?';
+            const values = [orderStatus, id];
             con.query(query, values, (err, res) => {
                 if(res) {
-                    /* Get order info */
-                    const query = 'SELECT * FROM orders o JOIN users u ON o.user = u.id WHERE o.id = ?';
-                    const values = [id];
-
-                    con.query(query, values, (err, res) => {
-                       if(res) {
-                           const firstName = res[0].first_name;
-                           const lastName = res[0].last_name;
-                           const email = res[0].email;
-                           const fullName = firstName + " " + lastName;
-                           /* Send email based on order status */
-                           if(orderStatus === "przyjęte do realizacji") {
-                               sendStatus2Email(id, email, fullName, response);
-                           }
-                           else if(orderStatus === "zrealizowane") {
-                               sendStatus3Email(id, email, fullName, letterNumber, response);
-                           }
-                           else {
-                               response.send({
-                                   result: 1
-                               });
-                           }
-                       }
-                       else {
-                           response.send({
-                               result: 0
-                           });
-                       }
+                    response.send({
+                        result: 1
                     });
                 }
                 else {
@@ -360,6 +350,42 @@ con.connect(err => {
                         result: 0
                     });
                 }
+                // if(res) {
+                //     /* Get order info */
+                //     const query = 'SELECT * FROM orders o JOIN users u ON o.user = u.id WHERE o.id = ?';
+                //     const values = [id];
+                //
+                //     con.query(query, values, (err, res) => {
+                //        if(res) {
+                //            const firstName = res[0].first_name;
+                //            const lastName = res[0].last_name;
+                //            const email = res[0].email;
+                //            const fullName = firstName + " " + lastName;
+                //            /* Send email based on order status */
+                //            if(orderStatus === "przyjęte do realizacji") {
+                //                sendStatus2Email(id, email, fullName, response);
+                //            }
+                //            else if(orderStatus === "zrealizowane") {
+                //                sendStatus3Email(id, email, fullName, letterNumber, response);
+                //            }
+                //            else {
+                //                response.send({
+                //                    result: 1
+                //                });
+                //            }
+                //        }
+                //        else {
+                //            response.send({
+                //                result: 0
+                //            });
+                //        }
+                //     });
+                // }
+                // else {
+                //     response.send({
+                //         result: 0
+                //     });
+                // }
             });
         });
 

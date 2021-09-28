@@ -9,6 +9,9 @@ const cors = require("cors");
 const crypto = require("crypto");
 const { v4: uuidv4 } = require('uuid');
 
+const API_KEY = 'f33b2f05-5c5e-48e3-a83f-3193410a0ede';
+const SIGNATURE_KEY = '4106b3c3-8ef7-4270-a918-2d6847a6886a';
+
 con.connect(err => {
     /* Set Przelewy24 credentials */
     router.post("/change-data", (request, response) => {
@@ -44,68 +47,57 @@ con.connect(err => {
     /* PAYMENT */
     router.post("/payment", cors(), async (request, response) => {
         /* Add order to database */
-        console.log("/payment");
-        const { sessionId } = request.body;
+        let { sessionId, email, amount } = request.body;
 
-        /* Generate SHA-384 checksum */
-        const query = 'SELECT * FROM przelewy24 WHERE id = 1';
-        con.query(query, (err, res) => {
-            let crc = res[0].crc;
-            let marchantId = res[0].marchant_id;
+        amount = amount * 100;
+        const idempotency = uuidv4();
 
-            let hash, data, gen_hash;
-            hash = crypto.createHash('sha384');
-            data = hash.update(`{"sessionId":"${sessionId}","merchantId":${marchantId},"amount":${parseFloat(request.body.amount)*100},"currency":"PLN","crc":"${crc}"}`, 'utf-8');
-            gen_hash = data.digest('hex');
+        let postData = {
+            amount: amount,
+            externalId: sessionId,
+            description: "Płatność za zakupy w sklepie Aloes",
+            buyer: {
+                email: email
+            }
+        }
 
-            /* Dane */
-            let postData = {
-                sessionId: sessionId,
-                posId: marchantId,
-                merchantId: marchantId,
-                amount: parseFloat(request.body.amount) * 100,
-                currency: "PLN",
-                description: "Platnosc za zakupy w sklepie HideIsland",
-                email: request.body.email,
-                country: "PL",
-                language: "pl",
-                urlReturn: "http://localhost:5000/dziekujemy",
-                urlStatus: "http://localhost:5000/payment/verify",
-                sign: gen_hash
-            };
+        let signature = crypto.createHmac('sha256', SIGNATURE_KEY).update(JSON.stringify(postData)).digest("base64");
 
-            // console.log(postData);
-            let responseToClient;
-
-            /* FIRST STEP - REGISTER */
-            got.post("https://sandbox.przelewy24.pl/api/v1/transaction/register", {
-                json: postData,
-                responseType: 'json',
-                headers: {
-                    'Authorization': 'Basic MTM4MzU0OjU0Nzg2ZGJiOWZmYTY2MzgwOGZmNGExNWRiMzI3MTNm' // tmp
-                }
+        got.post('https://api.sandbox.paynow.pl/v1/payments', {
+            json: postData,
+            responseType: 'json',
+            headers: {
+                'Api-Key': API_KEY,
+                'Signature': signature,
+                'Idempotency-Key': idempotency,
+            }
+        })
+            .then(res => {
+                response.send({
+                    result: res.body
+                });
             })
-                .then(res => {
-                    responseToClient = res.body.data.token;
-                    // if(res.body.data.token) {
-                        /* TMP */
-                        // const query = 'UPDATE orders SET payment_status = "opłacone" WHERE id = (SELECT id FROM orders ORDER BY date DESC LIMIT 1)';
-                        // con.query(query, (err, res) => {
-                        //     console.log("UPDATING PAYMENT STATUS");
-                        //     console.log(err);
-                        // });
-                    // }
-
-                    response.send({
-                        result: responseToClient
-                    });
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-        });
-
+            .then(err => {
+                console.log(err);
+            });
     });
+
+    router.post("/get-payment-status", (request, response) => {
+        const { paymentId } = request.body;
+
+        got.get(`https://api.sandbox.paynow.pl/v1/payments/${paymentId}/status`, {
+            headers: {
+                'Api-Key': API_KEY
+            }
+        })
+            .then(res => {
+               console.log(res.body);
+               response.send({
+                   result: res.body
+               });
+            });
+    });
+
 
     /* Payment - verify */
     router.post("/verify", async (request, response) => {
@@ -115,6 +107,8 @@ con.connect(err => {
         let amount = request.body.amount;
         let currency = request.body.currency;
         let orderId = request.body.orderId;
+
+        response.sendStatus(200);
 
         /* Get data */
         const query = 'SELECT * FROM przelewy24 WHERE id = 1';

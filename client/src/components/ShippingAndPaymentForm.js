@@ -10,7 +10,7 @@ import phoneIcon from "../static/img/phone.svg";
 import mailIcon from "../static/img/mail.svg";
 import {CartContext} from "../App";
 import {getAllShippingMethods} from "../admin/helpers/shippingFunctions";
-import {addNewOrder, addSell, checkCouponCode} from "../admin/helpers/orderFunctions";
+import {addNewOrder, addSell, changePaymentId, checkCouponCode} from "../admin/helpers/orderFunctions";
 import Modal from 'react-modal';
 import GeolocationWidget from "./GeolocationWidget";
 import closeImg from '../static/img/close.png'
@@ -38,6 +38,8 @@ const ShippingAndPaymentForm = () => {
     const [inPostCode, setInPostCode] = useState("");
     const [checkbox, setCheckbox] = useState(true);
     const [accoundExistsError, setAccountExistsError] = useState("");
+    const [shippingError, setShippingError] = useState("");
+    const [paymentError, setPaymentError] = useState("");
 
     const { cartContent } = useContext(CartContext);
 
@@ -183,6 +185,7 @@ const ShippingAndPaymentForm = () => {
                 if(!isAuth) {
                     addUser(email, null, fullName, phoneNumber, null, null, null, null, null, null, null, null)
                         .then(res => {
+                            console.log(res.data.result);
                             if(res.data.result === -1) {
                                 setAccountExistsError("Istnieje konto o podanym adresie email. Aby dokonać zakupu, zaloguj się.");
                             }
@@ -192,9 +195,12 @@ const ShippingAndPaymentForm = () => {
                         });
                 }
                 else {
-                    //addOrder(null, sessionId);
+                    addOrder(null, sessionId);
                 }
             }
+
+            if(shipping === -1) setShippingError("Wybierz metodę wysyłki");
+            if(payment === -1) setPaymentError("Wybierz metodę płatności");
         }
     });
 
@@ -202,13 +208,12 @@ const ShippingAndPaymentForm = () => {
         let insertedUserId = null;
 
         if(res) insertedUserId = res.data.userId;
-        console.log(res.data);
 
         if(checkbox) {
             /* Add order */
-            addNewOrder(payment, shipping, formik.values.address, formik.values.postalCode, formik.values.city, insertedUserId,
+            addNewOrder(payment, shipping, formik.values.address, formik.values.postalCode, formik.values.city, insertedUserId !== -1 && insertedUserId ? insertedUserId : parseInt(localStorage.getItem('sec-user-id')),
                 formik.values.comment, sessionId, formik.values.companyName, formik.values.nip, formik.values.companyAddress, formik.values.companyPostalCode, formik.values.companyCity,
-                sessionStorage.getItem('paczkomat-adres'), sessionStorage.getItem('paczkomat-kod'), sessionStorage.getItem('paczkomat-miasto'))
+                sum + shippingCost - discountInPLN, sessionStorage.getItem('paczkomat-adres'), sessionStorage.getItem('paczkomat-kod'), sessionStorage.getItem('paczkomat-miasto'))
                 .then(res => {
                     const orderId = res.data.result;
 
@@ -219,6 +224,7 @@ const ShippingAndPaymentForm = () => {
                             /* Add sells */
                             addSell(orderId, item, payment);
                         });
+                        console.log("orderId");
 
                         if(payment === 2) {
                             /* Platnosc za pobraniem */
@@ -230,8 +236,6 @@ const ShippingAndPaymentForm = () => {
                         }
                         else {
                             /* PAYMENT PROCESS */
-                            let paymentUri = "https://sandbox.przelewy24.pl/trnRequest/";
-
                             axios.post(`${settings.API_URL}/payment/payment`, {
                                 sessionId,
                                 email: formik.values.email,
@@ -241,8 +245,13 @@ const ShippingAndPaymentForm = () => {
                                     /* Remove cart from local storage */
                                     localStorage.removeItem('sec-cart');
 
-                                    const token = res.data.result;
-                                    window.location.href = `${paymentUri}${token}`;
+                                    const redirectUrl = res.data.result.redirectUrl;
+                                    const paymentId = res.data.result.paymentId;
+
+                                    changePaymentId(orderId, paymentId)
+                                        .then(res => {
+                                            window.location.href = `${redirectUrl}`;
+                                        });
                                 });
                         }
                     }
@@ -299,6 +308,22 @@ const ShippingAndPaymentForm = () => {
         }
     }
 
+    useEffect(() => {
+        if(accoundExistsError !== "") {
+            setTimeout(() => {
+                setAccountExistsError("");
+            }, 2000);
+        }
+    }, [accoundExistsError]);
+
+    useEffect(() => {
+        if(shipping !== -1) setShippingError("");
+    }, [shipping]);
+
+    useEffect(() => {
+        if(payment !== -1) setPaymentError("");
+    }, [payment]);
+
     Modal.setAppElement(document.querySelector(".shippingAndPayment"));
 
     return <main className="shippingAndPayment">
@@ -323,62 +348,66 @@ const ShippingAndPaymentForm = () => {
                     <h3 className="form__inner__header">
                         Dane osobowe
                     </h3>
-                    <label className="label">
-                        <img className="label__icon" src={userIcon} alt="imie-i-nazwisko" />
-                        <input className="input"
-                               name="fullName"
-                               value={formik.values.fullName}
-                               onChange={formik.handleChange}
-                               placeholder="Imię i nazwisko" />
-                        {formik.errors.fullName && formik.touched.fullName ? <span className="formError">{formik.errors.fullName}</span> : "" }
-                    </label>
-                    <label className="label">
-                        <img className="label__icon" src={phoneIcon} alt="numer-telefonu" />
-                        <input className="input"
-                               name="phoneNumber"
-                               value={formik.values.phoneNumber}
-                               onChange={formik.handleChange}
-                               placeholder="Nr telefonu" />
-                        {formik.errors.phoneNumber && formik.touched.phoneNumber ? <span className="formError">{formik.errors.phoneNumber}</span> : "" }
-                    </label>
-                    <label className="label">
-                        <img className="label__icon" src={mailIcon} alt="adres-email" />
-                        <input className="input"
-                               name="email"
-                               value={formik.values.email}
-                               onChange={formik.handleChange}
-                               placeholder="Adres e-mail" />
-                        {formik.errors.email && formik.touched.email ? <span className="formError">{formik.errors.email}</span> : "" }
-                    </label>
-                    <label className="label">
-                        <img className="label__icon" src={locationIcon} alt="ulica" />
-                        <input className="input"
-                               name="address"
-                               value={formik.values.address}
-                               onChange={formik.handleChange}
-                               placeholder="Ulica i nr domu/lokalu" />
-                        {formik.errors.address && formik.touched.address ? <span className="formError">{formik.errors.address}</span> : "" }
-                    </label>
-                    <section className="form__flex">
+                    {accoundExistsError === "" ? <>
                         <label className="label">
-                            <img className="label__icon" src={locationIcon} alt="kod-pocztowy" />
+                            <img className="label__icon" src={userIcon} alt="imie-i-nazwisko" />
                             <input className="input"
-                                   name="postalCode"
-                                   value={formik.values.postalCode}
+                                   name="fullName"
+                                   value={formik.values.fullName}
                                    onChange={formik.handleChange}
-                                   placeholder="Kod pocztowy" />
-                            {formik.errors.postalCode && formik.touched.postalCode ? <span className="formError">{formik.errors.postalCode}</span> : "" }
+                                   placeholder="Imię i nazwisko" />
+                            {formik.errors.fullName && formik.touched.fullName ? <span className="formError">{formik.errors.fullName}</span> : "" }
                         </label>
                         <label className="label">
-                            <img className="label__icon" src={locationIcon} alt="miasto" />
+                            <img className="label__icon" src={phoneIcon} alt="numer-telefonu" />
                             <input className="input"
-                                   name="city"
-                                   value={formik.values.city}
+                                   name="phoneNumber"
+                                   value={formik.values.phoneNumber}
                                    onChange={formik.handleChange}
-                                   placeholder="Miasto" />
-                            {formik.errors.city && formik.touched.city ? <span className="formError">{formik.errors.city}</span> : "" }
+                                   placeholder="Nr telefonu" />
+                            {formik.errors.phoneNumber && formik.touched.phoneNumber ? <span className="formError">{formik.errors.phoneNumber}</span> : "" }
                         </label>
-                    </section>
+                        <label className="label">
+                            <img className="label__icon" src={mailIcon} alt="adres-email" />
+                            <input className="input"
+                                   name="email"
+                                   value={formik.values.email}
+                                   onChange={formik.handleChange}
+                                   placeholder="Adres e-mail" />
+                            {formik.errors.email && formik.touched.email ? <span className="formError">{formik.errors.email}</span> : "" }
+                        </label>
+                        <label className="label">
+                            <img className="label__icon" src={locationIcon} alt="ulica" />
+                            <input className="input"
+                                   name="address"
+                                   value={formik.values.address}
+                                   onChange={formik.handleChange}
+                                   placeholder="Ulica i nr domu/lokalu" />
+                            {formik.errors.address && formik.touched.address ? <span className="formError">{formik.errors.address}</span> : "" }
+                        </label>
+                        <section className="form__flex">
+                            <label className="label">
+                                <img className="label__icon" src={locationIcon} alt="kod-pocztowy" />
+                                <input className="input"
+                                       name="postalCode"
+                                       value={formik.values.postalCode}
+                                       onChange={formik.handleChange}
+                                       placeholder="Kod pocztowy" />
+                                {formik.errors.postalCode && formik.touched.postalCode ? <span className="formError">{formik.errors.postalCode}</span> : "" }
+                            </label>
+                            <label className="label">
+                                <img className="label__icon" src={locationIcon} alt="miasto" />
+                                <input className="input"
+                                       name="city"
+                                       value={formik.values.city}
+                                       onChange={formik.handleChange}
+                                       placeholder="Miasto" />
+                                {formik.errors.city && formik.touched.city ? <span className="formError">{formik.errors.city}</span> : "" }
+                            </label>
+                        </section>
+                    </> : <span className="changePasswordResult">
+                        {accoundExistsError}
+                    </span>}
                 </section>
 
                 <label className="label--vat">
@@ -457,6 +486,10 @@ const ShippingAndPaymentForm = () => {
                         </>
                     })}
 
+                    {shippingError !== "" ? <span className="error error--shippingAndPayment">
+                        {shippingError}
+                    </span> : ""}
+
 
                     <h3 className="form__inner__header form__inner__header--extraMargin">
                         Sposób płatności
@@ -473,6 +506,10 @@ const ShippingAndPaymentForm = () => {
                         </button>
                         Płatność za pobraniem
                     </label>
+
+                    {paymentError !== "" ? <span className="error error--shippingAndPayment">
+                        {paymentError}
+                    </span> : ""}
 
                     <h3 className="form__inner__header form__inner__header--extraMargin">
                         Pozostałe

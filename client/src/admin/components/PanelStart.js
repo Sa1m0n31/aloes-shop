@@ -43,9 +43,9 @@ const PanelStart = () => {
                 <h3 className="panelContent__start__item__header">Wysyłka</h3>
             </a>
 
-            <a className="panelContent__start__item" href="/panel/platnosci">
+            <a className="panelContent__start__item" href="/panel/zdjecia">
                 <img className="panelContent__start__item__img" src={creditCart} alt="produkty" />
-                <h3 className="panelContent__start__item__header">Płatności</h3>
+                <h3 className="panelContent__start__item__header">Zdjęcia</h3>
             </a>
 
             <a className="panelContent__start__item" href="/panel/ustawienia">

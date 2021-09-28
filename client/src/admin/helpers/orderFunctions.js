@@ -13,7 +13,7 @@ const getOrderDetails = (id) => {
 
 const addNewOrder = (payment, shipping, address, postalCode, city, user,
                      comment, sessionId, companyName, nip, companyAddress,
-                     comapnyPostalCode, companyCity, amount,
+                     companyPostalCode, companyCity, amount,
                      inPostAddress, inPostCode, inPostCity) => {
     console.log("addNewOrder");
     return axios.post(`${API_URL}/order/add`, {
@@ -27,6 +27,9 @@ const addNewOrder = (payment, shipping, address, postalCode, city, user,
         sessionId,
         companyName,
         nip,
+        companyAddress,
+        companyCity,
+        companyPostalCode,
         amount,
         inPostAddress,
         inPostCode,
@@ -58,6 +61,10 @@ const checkCouponCode = (code) => {
     })
 }
 
+const changePaymentId = (id, paymentId) => {
+    return axios.post(`${API_URL}/order/change-payment-id`, {id, paymentId});
+}
+
 const addSell = (orderId, item, paymentMethod) => {
     return  axios.post(`${settings.API_URL}/order/add-sell`, {
         orderId,
@@ -68,4 +75,8 @@ const addSell = (orderId, item, paymentMethod) => {
     })
 }
 
-export { addSell, getAllOrders, getOrderDetails, calculateCartSum, deleteOrderById, getRibbons, checkCouponCode, addNewOrder };
+const updatePaymentStatus = (id, status) => {
+    return axios.post(`${API_URL}/order/change-payment-status`, { id, status });
+}
+
+export { addSell, getAllOrders, getOrderDetails, calculateCartSum, deleteOrderById, getRibbons, checkCouponCode, addNewOrder, changePaymentId, updatePaymentStatus };

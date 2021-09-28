@@ -15,4 +15,10 @@ const changePaymentData = ({marchantId, crc, apiKey}) => {
     });
 }
 
-export { getPaymentData, changePaymentData };
+const getPaymentStatus = (paymentId = 'NO27-5N2-NHH-WW2') => {
+    return axios.post(`${API_URL}/payment/get-payment-status`, { paymentId });
+}
+
+
+
+export { getPaymentData, changePaymentData, getPaymentStatus };

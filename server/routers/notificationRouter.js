@@ -73,28 +73,28 @@ con.connect(err => {
             html: `<main>
                 <header style="max-width: 900px; box-sizing: border-box;">
                     <img style="width: 100%;
-    transform: scaleY(1.03);" src="http://localhost:5000/image?url=/media/notification/logo.jpg" alt="hideisland-logo"/>
+    transform: scaleY(1.03);" src="https://aloes.skylo-test3.pl/image?url=/media/notification/logo.jpg" alt="hideisland-logo"/>
                 </header>
                 <section style="background: #D9D9D9; padding: 30px; max-width: 900px; box-sizing: border-box;">
                     <h1 class="notification__header" style="margin: 0 0 20px; font-weight: 900; font-size: 1.5rem; color: #313131;">
                         Twój ulubiony produkt już na Ciebie czeka!
                     </h1>
 
-                    <a style="display: inline-block; text-decoration: none;font-size: 21px; font-weight: 700; color: #313131; margin: 20px 0;" href="http://localhost:5000/sklep">
+                    <a style="display: inline-block; text-decoration: none;font-size: 21px; font-weight: 700; color: #313131; margin: 20px 0;" href="https://aloes.skylo-test3.pl/sklep">
                         Kliknij tutaj, aby przejść do sklepu
-                        <img style=" width: 50px; height: auto; margin-left: 20px; vertical-align: middle;" src="http://localhost:5000/image?url=/media/notification/right-arrow.png" alt="przejdz-do-sklepu"/>
+                        <img style=" width: 50px; height: auto; margin-left: 20px; vertical-align: middle;" src="https://aloes.skylo-test3.pl/image?url=/media/notification/right-arrow.png" alt="przejdz-do-sklepu"/>
                     </a>
 
                     <section style="display: flex; height: 260px; overflow: hidden; margin: 30px auto;">
                         <figure style="overflow: hidden; display: block; margin: 0; margin-right: 15px;">
-                            <img style="width: 100%; display: block;" src="http://localhost:5000/image?url=/media/notification/bluza-biala.jpg"/>
+                            <img style="width: 100%; display: block;" src="https://aloes.skylo-test3.pl/image?url=/media/notification/bluza-biala.jpg"/>
                         </figure>
                         <figure style="overflow: hidden; display: block; margin: 0;">
-                            <img style="width: 100%; display: block;" src="http://localhost:5000/image?url=/media/notification/metka.jpg"/>
+                            <img style="width: 100%; display: block;" src="https://aloes.skylo-test3.pl/image?url=/media/notification/metka.jpg"/>
                         </figure>
                     </section>
                     <figure style="overflow: hidden; display: block; height: 300px; margin: 0; margin-top: 20px;">
-                        <img style="width: 100%; display: block;" src="http://localhost:5000/image?url=/media/notification/wieszak.jpg"/>
+                        <img style="width: 100%; display: block;" src="https://aloes.skylo-test3.pl/image?url=/media/notification/wieszak.jpg"/>
                     </figure>
 
                     <h2 class="notification__secondHeader" style="color: #313131; font-size: 1.2rem; font-weight: 700; margin: 20px 0;">
@@ -103,17 +103,17 @@ con.connect(err => {
 
                     <section>
                         <a style="color: #313131; font-size: 13px; display: block;width: 49%;text-decoration: none;margin-bottom: 20px;" href="https://www.facebook.com/HideIslandwear">
-                            <img style=" width: 30px;height: auto;margin-right: 8px;vertical-align: middle;" src="http://localhost:5000/image?url=/media/notification/fb.png" alt="facebook"/>
+                            <img style=" width: 30px;height: auto;margin-right: 8px;vertical-align: middle;" src="https://aloes.skylo-test3.pl/image?url=/media/notification/fb.png" alt="facebook"/>
                             Hideislandwear
                         </a>
                         <a style="color: #313131;font-size: 13px;display: block;width: 49%;text-decoration: none;margin-bottom: 20px;" href="http://hideisland.pl">
-                            <img style=" width: 30px;height: auto;margin-right: 8px;vertical-align: middle;" src="http://localhost:5000/image?url=/media/notification/website.png" alt="strona-internetowa"/>
+                            <img style=" width: 30px;height: auto;margin-right: 8px;vertical-align: middle;" src="https://aloes.skylo-test3.pl/image?url=/media/notification/website.png" alt="strona-internetowa"/>
                             www.hideisland.pl
                         </a>
                     </section>
                      <a style="color: #313131;font-size: 13px;display: block;width: 100%;text-decoration: none;margin-bottom: 20px;"
                            href="https://www.instagram.com/HideIsland_wear/?fbclid=IwAR3Y8NLYGmXQ-_pvGE1UZLO1oR0iMfT0uNWYZgvrpKHv40N4fKvsfdC4UPc">
-                            <img style=" width: 30px;height: auto;margin-right: 8px;vertical-align: middle;" src="http://localhost:5000/image?url=/media/notification/insta.png" alt="instagram"/>
+                            <img style=" width: 30px;height: auto;margin-right: 8px;vertical-align: middle;" src="https://aloes.skylo-test3.pl/image?url=/media/notification/insta.png" alt="instagram"/>
                             Hideislandwear
                     </a>
                 </section>

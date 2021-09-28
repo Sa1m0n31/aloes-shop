@@ -282,8 +282,8 @@
         margin: 40px auto;
     }
 
-    .banner__img {
-        height: 250px;
+    .hero__btn__img {
+        width: 15px;
     }
 
     .siteHeader__companyLink__img {
@@ -473,5 +473,22 @@
     .singleOrder__item {
         width: 48%;
         margin-bottom: 30px;
+    }
+
+    .shopFilters {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filterSection--second {
+        margin-left: 0;
+    }
+
+    .shopFilters .label--vat {
+        margin: 10px 30px 10px 0;
+    }
+
+    .shopFilters > section:first-of-type {
+        margin-bottom: 15px;
     }
 }
