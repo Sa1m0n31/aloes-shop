@@ -9,7 +9,7 @@ const SiteHeaderMobile = () => {
             <img className="siteHeaderMobile__link__img" src={search} alt="szukaj" />
         </a>
 
-        <a className="siteHeaderMobile__link" href="/zarejestruj-sie">
+        <a className="siteHeaderMobile__link" href="/zaloguj-sie">
             <img className="siteHeaderMobile__link__img" src={user} alt="panel-klienta" />
         </a>
 

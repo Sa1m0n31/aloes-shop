@@ -169,10 +169,11 @@ con.connect((err) => {
     router.post("/get-user-orders", (request, response) => {
         const { id } = request.body;
         const values = [id];
-        const query = 'SELECT * FROM orders o JOIN sells s ON o.id = s.order_id WHERE o.user = ? GROUP BY o.id';
+        const query = 'SELECT SUM(p.price * s.quantity) as order_value, o.date, o.id, o.order_status, o.payment_status FROM orders o ' +
+            'JOIN sells s ON o.id = s.order_id ' +
+            'JOIN products p ON p.id = s.product_id ' +
+            'WHERE o.user = ? GROUP BY o.id;';
         con.query(query, values, (err, res) => {
-            console.log(err);
-            console.log(res);
             if(res) {
                 response.send({
                     result: res

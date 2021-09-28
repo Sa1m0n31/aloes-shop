@@ -51,7 +51,6 @@ const MyAccount = () => {
     const [companyPostalCode, setCompanyPostalCode] = useState("");
 
     useEffect(() => {
-        console.log(userId);
         getUserData(userId)
             .then(res => {
                 const result = res?.data?.result;
@@ -168,7 +167,8 @@ const MyAccount = () => {
                                                 id={item.id}
                                                 date={item.date}
                                                 orderStatus={item.order_status}
-                                                paymentStatus={item.payment_status} />
+                                                paymentStatus={item.payment_status}
+                                                orderValue={item.order_value} />
                         }) : <h4 className="noOrdersHeader">
                             Brak zamówień
                         </h4> }

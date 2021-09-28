@@ -302,7 +302,7 @@ con.connect(err => {
 
    /* GET RECOMMENDATIONS */
    router.get('/get-recommendations', (request, response) => {
-      const query = 'SELECT *, p.id as product_id FROM products p JOIN images i ON p.main_image = i.id WHERE recommendation = 1 LIMIT 6';
+      const query = 'SELECT *, p.id as product_id FROM products p JOIN images i ON p.main_image = i.id WHERE recommendation = 1 LIMIT 5';
       con.query(query, (err, res) => {
          if(res) {
             response.send({
@@ -319,7 +319,7 @@ con.connect(err => {
 
    /* GET DISCOUNTS */
    router.get('/get-discounts', (request, response) => {
-      const query = 'SELECT *, p.id as product_id FROM products p JOIN images i ON p.main_image = i.id WHERE discount IS NOT NULL and discount != 0 LIMIT 6';
+      const query = 'SELECT *, p.id as product_id FROM products p JOIN images i ON p.main_image = i.id WHERE discount IS NOT NULL and discount != 0 LIMIT 5';
       con.query(query, (err, res) => {
          if(res) {
             response.send({

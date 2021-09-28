@@ -10,7 +10,7 @@ import SiteHeaderMobile from "../components/SiteHeaderMobile";
 import AddedToCart from "../components/AddedToCart";
 
 const Homepage = () => {
-    return <div className="container">
+    return <div className="container homepage">
         <AddedToCart />
 
         <SiteHeader />

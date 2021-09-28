@@ -27,8 +27,8 @@ const RegisterForm = () => {
             .matches(/\d{3,}/, 'Numer telefonu może zawierać wyłącznie cyfry'),
         postalCode: Yup.string()
             .matches(/\d{2}-\d{3}/, "Podaj poprawny kod pocztowy"),
-        // check: Yup.boolean()
-        //     .oneOf([true]),
+        check: Yup.boolean()
+            .oneOf([true]),
         marketing: Yup.boolean()
             .oneOf([true, false])
     });
@@ -213,7 +213,14 @@ const RegisterForm = () => {
             </section>
         </section> : ""}
 
-        <button className="button button--submit" type="submit">
+        <label className="label--vat">
+            <button type="button" className="checkBtn" onClick={() => { formik.setFieldValue('check', !formik.values.check); }}>
+                {formik.values.check ? <span className="checkBtn--check"></span> : ""}
+            </button>
+            Akceptuję <a href="/regulamin" target="_blank">Regulamin</a> oraz <a href="/polityka-prywatnosci" target="_blank">Politykę prywatności</a>
+        </label>
+
+        <button className={formik.values.check ? "button button--submit" : "button button--submit button--submit--disabled"} type="submit" disabled={!formik.values.check}>
             Załóż konto
         </button>
     </form>

@@ -23,6 +23,7 @@ h1, h2, h3, h4, h5, h6, p, label, button, a, li, span, textarea {
 }
 
 button, a {
+    -webkit-tap-highlight-color: transparent;
     cursor: pointer;
 }
 
@@ -95,7 +96,7 @@ a {
 }
 
 .label--search {
-    border-bottom: 1px solid #6D6D6D;
+    border-bottom: 1px solid var(--brown);
 }
 
 .input--search {
@@ -165,7 +166,7 @@ a {
 }
 
 .siteMenu__link:hover {
-    color: var(--brown);
+    opacity: .8;
 }
 
 /* Hero section */
@@ -281,8 +282,25 @@ a {
 .productsRow__main__item {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
+    margin-bottom: 60px;
+}
+
+.homepage .productsRow__main__item {
+    margin-bottom: 10px;
+}
+
+@media(min-width: 1200px) {
+    .productsRow__main__item {
+        height: 450px;
+    }
+}
+
+@media(min-width: 1600px) {
+    .productsRow__main__item {
+        height: 500px;
+    }
 }
 
 .productsRow__item__title {
@@ -622,10 +640,19 @@ a {
     font-weight: 700;
 }
 
+.button--submit--disabled {
+    background: var(--brown) !important;
+    cursor: default;
+}
+
 /* Register page */
 .registerForm {
     margin: 50px auto;
     max-width: 650px;
+}
+
+.label--vat a {
+    margin: 0 5px;
 }
 
 .registerForm .form__inner {
@@ -798,15 +825,12 @@ a {
 
 .button--emptySearch {
     width: 300px;
+    max-width: 90%;
     height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 30px;
-}
-
-.emptySearch {
-
 }
 
 /* Added to cart */
@@ -995,6 +1019,7 @@ a {
     justify-content: center;
     align-items: center;
     width: 400px;
+    max-width: 90%;
     height: 50px;
     font-weight: 700;
     margin: 40px 0 200px;
@@ -1074,6 +1099,10 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.cart__item__sum .cart__item__value {
+    margin-bottom: -3px;
 }
 
 .cart__item__section {
@@ -1432,4 +1461,31 @@ a {
     justify-content: center;
     align-items: center;
     font-size: 13px;
+}
+
+.label--checkbox {
+    display: block;
+    margin: 20px 0;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+input[type=checkbox] {
+    margin-right: 15px;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.green {
+    color: #50AC30;
+}
+
+.orange {
+    color: #FFA500;
+}
+
+.red {
+    color: #941212;
 }
