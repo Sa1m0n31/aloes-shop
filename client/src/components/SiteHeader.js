@@ -7,7 +7,7 @@ import client from '../static/img/user.svg';
 import cart from '../static/img/shopping-basket.svg';
 import hamburger from '../static/img/hamburger-menu.svg'
 import closeIcon from '../static/img/close.png'
-import {getProductCategories} from "../admin/helpers/productFunctions";
+import caloeLogo from '../static/img/caloe-logo.png'
 import {getAllCategories} from "../helpers/categoryFunctions";
 
 const SiteHeader = () => {
@@ -53,9 +53,9 @@ const SiteHeader = () => {
     return <header className="siteHeader">
         <section className="siteHeader__top">
             <h4 className="siteHeader__top__header">
-                Celina Adamczyk, FBO 2391382
+                Celina Adamczyk, FBO 480900114411
             </h4>
-            <a className="siteHeader__top__fb d-desktop" href="#">
+            <a className="siteHeader__top__fb d-desktop" target="_blank" href="https://www.facebook.com/ForeverPolandHQ">
                 Forever Living na Facebooku
                 <img className="siteHeader__top__fb__img" src={fbIcon} alt="facebook" />
             </a>
@@ -82,7 +82,7 @@ const SiteHeader = () => {
             </section>
 
             <section className="siteHeader__bottom__subsection">
-                LOGO
+                <img className="siteHeader__caloeLogo" src={caloeLogo} alt="caloe-produkty-aloesowe" />
             </section>
 
             <section className="siteHeader__bottom__subsection d-desktop">

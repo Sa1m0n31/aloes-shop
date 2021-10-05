@@ -760,7 +760,7 @@ input[type=file] {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: var(--black-primary) !important;
+    background: #fff !important;
     position: absolute;
     top: 50% !important;
     left: 50% !important;

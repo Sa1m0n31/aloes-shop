@@ -32,6 +32,7 @@ const getNewId = () => {
 }
 
 const deleteProduct = (id) => {
+    console.log(id);
     return axios.post(`${API_URL}/product/delete`, { id });
 }
 

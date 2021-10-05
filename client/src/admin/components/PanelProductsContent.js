@@ -20,7 +20,6 @@ const PanelProductsContent = () => {
     useEffect(() => {
         getAllProducts()
             .then(res => {
-                console.log(res.data);
                const result = res.data.result;
                setProducts(result);
                sessionStorage.setItem('skylo-e-commerce-products', JSON.stringify(result));
@@ -33,6 +32,8 @@ const PanelProductsContent = () => {
     }
 
     const deleteProductById = () => {
+        console.log("deleting product....");
+        console.log(candidate);
         deleteProduct(candidate)
             .then(res => {
                 if(res.data.result === 1) setDeleteMsg("Produkt został usunięty");
@@ -151,7 +152,7 @@ const PanelProductsContent = () => {
                                         <img className="panelContent__column__icon" src={exit} alt="przejdz" />
                                     </a>
                                 </button>
-                                <button className="panelContent__column__btn" onClick={() => { openModal(item.id) }}>
+                                <button className="panelContent__column__btn" onClick={() => { openModal(item.product_id) }}>
                                         <img className="panelContent__column__icon" src={trash} alt="usuń" />
                                 </button>
                             </div>

@@ -13,7 +13,6 @@ import Modal from "react-modal";
 const PanelOrdersContent = () => {
     const [orders, setOrders] = useState([]);
     const [sorting, setSorting] = useState(0);
-    const [filter, setFilter] = useState(0);
     const [modal, setModal] = useState(false);
     const [candidate, setCandidate] = useState(0);
     const [deleteMsg, setDeleteMsg] = useState("");
@@ -25,6 +24,7 @@ const PanelOrdersContent = () => {
         getAllOrders()
             .then(res => {
                 const result = res.data.result;
+                console.log(result);
                 setOrders(result?.reverse());
                 sessionStorage.setItem('skylo-e-commerce-orders', JSON.stringify(result));
             });

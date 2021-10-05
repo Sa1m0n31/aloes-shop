@@ -47,6 +47,11 @@ a {
     margin: auto;
 }
 
+.siteHeader__caloeLogo {
+    width: clamp(50px, 25vw, 300px);
+    height: auto;
+}
+
 .siteHeader__top {
     margin-top: 15px;
     display: flex;

@@ -140,19 +140,19 @@ const Footer = () => {
             </h4>
             <ul className="footer__col__list">
                 <li className="footer__col__list__item">
-                    Sklep Taki
+                    SOMMITÉ Sp. z o.o.
                 </li>
                 <li className="footer__col__list__item">
-                    ul. Taka 92
+                    ul. Święty Marcin 29/8
                 </li>
                 <li className="footer__col__list__item">
-                    12-456 Takowo
+                    61-806 Poznań
                 </li>
                 <li className="footer__col__list__item">
-                    tel. 231 282 021
+                    tel: 570 977 900
                 </li>
                 <li className="footer__col__list__item">
-                    e-mail: biuro@taki.pl
+                    e-mail: sklep@caloe.pl
                 </li>
             </ul>
         </section>

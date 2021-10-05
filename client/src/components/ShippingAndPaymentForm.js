@@ -23,7 +23,7 @@ import auth from "../admin/helpers/auth";
 const ShippingAndPaymentForm = () => {
     const [vat, setVat] = useState(false);
     const [shipping, setShipping] = useState(-1);
-    const [payment, setPayment] = useState(-1);
+    const [payment, setPayment] = useState(1);
     const [coupon, setCoupon] = useState("");
     const [sum, setSum] = useState(0);
     const [shippingCost, setShippingCost] = useState(0);
@@ -500,12 +500,12 @@ const ShippingAndPaymentForm = () => {
                         </button>
                         Płatności internetowe
                     </label>
-                    <label className="label--vat">
-                        <button type="button" className="checkBtn" onClick={() => { setPayment(2); }}>
-                            {payment === 2 ? <span className="checkBtn--check"></span> : ""}
-                        </button>
-                        Płatność za pobraniem
-                    </label>
+                    {/*<label className="label--vat">*/}
+                    {/*    <button type="button" className="checkBtn" onClick={() => { setPayment(2); }}>*/}
+                    {/*        {payment === 2 ? <span className="checkBtn--check"></span> : ""}*/}
+                    {/*    </button>*/}
+                    {/*    Płatność za pobraniem*/}
+                    {/*</label>*/}
 
                     {paymentError !== "" ? <span className="error error--shippingAndPayment">
                         {paymentError}

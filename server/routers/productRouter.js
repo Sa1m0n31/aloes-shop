@@ -341,7 +341,6 @@ con.connect(err => {
 
       const query = 'DELETE FROM products WHERE id = ?';
       con.query(query, values, (err, res) => {
-         console.log(err);
          let result = 0;
          if(res) result = 1;
          response.send({

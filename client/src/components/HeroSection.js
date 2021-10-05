@@ -1,7 +1,6 @@
 import React, {useRef, useEffect, useState} from 'react'
 import ReactSiema from 'react-siema';
 import arrow from '../static/img/right-arrow.svg';
-import example from '../static/img/baner.png';
 import {getBanners} from "../helpers/homepageFunctions";
 import settings from "../admin/helpers/settings";
 
@@ -9,6 +8,7 @@ const HeroSection = () => {
     let slider = useRef({currentSlide: 0});
 
     const [banners, setBanners] = useState({});
+    const [slide, setSlide] = useState(0)
 
     useEffect(() => {
         getBanners()
@@ -17,12 +17,23 @@ const HeroSection = () => {
             });
     }, []);
 
+    const sliderInterval = (slider) => {
+        setInterval(() => {
+            if(slider) {
+                slider.next();
+                setSlide(slider.currentSlide);
+            }
+        }, 5000);
+    }
+
     const nextSlide = () => {
         slider.next();
+        setSlide(slider.currentSlide);
     }
 
     const prevSlide = () => {
         slider.prev();
+        setSlide(slider.currentSlide);
     }
 
     return <main className="hero">
@@ -34,7 +45,7 @@ const HeroSection = () => {
                     loop={true}
         >
             <a className="banner" href={banners.slider_link_1}>
-                <img className="banner__img" src={`${settings.API_URL}/image?url=/media/homepage/${banners.slider_image_1}`} alt="baner" />
+                <img onLoad={() => { sliderInterval(slider); }} className="banner__img" src={`${settings.API_URL}/image?url=/media/homepage/${banners.slider_image_1}`} alt="baner" />
             </a>
             <a className="banner" href={banners.slider_link_2}>
                 <img className="banner__img" src={`${settings.API_URL}/image?url=/media/homepage/${banners.slider_image_2}`} alt="baner" />
