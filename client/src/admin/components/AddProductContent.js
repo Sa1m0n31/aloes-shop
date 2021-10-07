@@ -20,7 +20,7 @@ const AddProductContent = () => {
     const [name, setName] = useState("");
     const [subtitle, setSubtitle] = useState("");
     const [id, setId] = useState(0);
-    const [categoryId, setCategoryId] = useState(1); // 1 - Oferta indywidualna, 2 - Menu grupowe, 3 - Menu bankietowe
+    const [categoryId, setCategoryId] = useState(1);
     const [product, setProduct] = useState([]);
     const [categories, setCategories] = useState([]);
     const [hidden, setHidden] = useState(false);
@@ -30,8 +30,9 @@ const AddProductContent = () => {
     const [mainImageIndex, setMainImageIndex] = useState(0);
     const [mainImageId, setMainImageId] = useState(0);
     const [discount, setDiscount] = useState(null);
-    const [stock, setStock] = useState(0);
+    const [stock, setStock] = useState(null);
     const [details, setDetails] = useState("");
+    const [displayOrder, setDisplayOrder] = useState(null);
 
     /* Prices */
     const [price, setPrice] = useState(null);
@@ -121,9 +122,11 @@ const AddProductContent = () => {
     }, []);
 
     const setInitialValues = (productData) => {
+        console.log(productData);
         setName(productData.name);
         setSubtitle(productData.subtitle);
         setPrice(productData.price);
+        setDisplayOrder(productData.display_order);
         setDiscount(productData.discount);
         setCategoryId(productData.category_id);
         setHidden(productData.hidden);
@@ -266,6 +269,7 @@ const AddProductContent = () => {
 
                 {/* PRICES */}
                 <label className="addProduct__label">
+                    Cena
                     <input className="addProduct__input"
                            name="price"
                            type="number"
@@ -275,6 +279,7 @@ const AddProductContent = () => {
                            placeholder="Cena" />
                 </label>
                 <label className="addProduct__label">
+                    Promocja
                     <input className="addProduct__input"
                            name="discount"
                            type="number"
@@ -284,12 +289,22 @@ const AddProductContent = () => {
                            placeholder="Promocja" />
                 </label>
                 <label className="addProduct__label">
+                    Ilość na magazynie
                     <input className="addProduct__input"
                            name="stock"
                            type="number"
                            value={stock}
                            onChange={(e) => { setStock(e.target.value) }}
                            placeholder="Ilość na magazynie" />
+                </label>
+                <label className="addProduct__label">
+                    Kolejność wyświetlania
+                    <input className="addProduct__input"
+                           name="displayOrder"
+                           type="number"
+                           value={displayOrder}
+                           onChange={(e) => { setDisplayOrder(e.target.value) }}
+                           placeholder="Kolejność wyświetlania" />
                 </label>
 
 

@@ -91,13 +91,12 @@
     .footer__col:nth-of-type(4) {
         width: 30%;
     }
+}
 
-    .myAccount__section--orders {
-        width: 55%;
-    }
-
+@media(max-width: 1300px) {
+    .myAccount__section--orders,
     .myAccount__section--data {
-        width: 44%;
+        width: 100%;
     }
 }
 
@@ -192,11 +191,6 @@
 
     .cart__item__sum > * {
         font-size: 21px !important;
-    }
-
-    .myAccount__section--orders,
-    .myAccount__section--data {
-        width: 100%;
     }
 }
 
@@ -486,6 +480,14 @@
     .single__header__price__crossed {
         display: block;
         padding-right: 0;
+    }
+
+    .baner__inner {
+        padding: 40px 20px;
+    }
+
+    .baner__inner__header, .baner__inner__link {
+        font-size: 14px;
     }
 }
 

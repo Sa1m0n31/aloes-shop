@@ -26,7 +26,7 @@ const CartContent = () => {
         let sum = 0;
         currentCart?.forEach((item, index, array) => {
             sum += item.price * item.amount;
-            if(index === array.length-1) setSum(sum);
+            if(index === array.length-1) setSum(sum.toFixed(2));
         });
     }
 

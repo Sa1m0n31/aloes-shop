@@ -79,4 +79,16 @@ const updatePaymentStatus = (id, status) => {
     return axios.post(`${API_URL}/order/change-payment-status`, { id, status });
 }
 
-export { addSell, getAllOrders, getOrderDetails, calculateCartSum, deleteOrderById, getRibbons, checkCouponCode, addNewOrder, changePaymentId, updatePaymentStatus };
+const changePaymentLink = (id, link) => {
+    return axios.post(`${API_URL}/order/change-payment-link`, {
+        id, link
+    });
+}
+
+const sendOrderInfo = (orderId) => {
+    return axios.post(`${API_URL}/order/send-order-info`, {
+        orderId
+    });
+}
+
+export { addSell, getAllOrders, getOrderDetails, calculateCartSum, deleteOrderById, getRibbons, checkCouponCode, addNewOrder, changePaymentId, updatePaymentStatus, changePaymentLink, sendOrderInfo };

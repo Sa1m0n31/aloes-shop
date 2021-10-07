@@ -7,7 +7,7 @@
     padding: 0;
 }
 
-h1, h2, h3, h4, h5, h6, p, li, input, button, a, label, span, address {
+h1, h2, h3, h4, h5, h6, p, li, input, button, a, label, span, address, section {
     font-family: 'Open sans', sans-serif;
 }
 
@@ -467,6 +467,7 @@ ul {
 
 .addProduct__label {
     display: block;
+    font-size: 13px;
     margin: 25px 0;
 }
 

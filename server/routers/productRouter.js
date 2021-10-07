@@ -46,7 +46,7 @@ con.connect(err => {
          if (err) throw err;
 
          /* Prepare */
-         let { id, mainImageIndex, name, subtitle, price, discount, shortDescription, details, recommendation, hidden, stock } = request.body;
+         let { id, mainImageIndex, name, subtitle, price, discount, shortDescription, details, recommendation, hidden, stock, displayOrder } = request.body;
          hidden = hidden === "hidden";
          recommendation = recommendation === "true";
          filenames.reverse();
@@ -68,8 +68,8 @@ con.connect(err => {
          filenames[mainImageIndex] = tmp;
 
          /* 1 - ADD PRODUCT TO PRODUCTS TABLE */
-         const values = [id, name, subtitle, price, discount, shortDescription, details, null, recommendation, hidden, stock];
-         const query = 'INSERT INTO products VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?)';
+         const values = [id, name, subtitle, price, discount, shortDescription, details, null, recommendation, hidden, stock, displayOrder];
+         const query = 'INSERT INTO products VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?)';
          con.query(query, values, (err, res) => {
             if(res) {
                /* 2nd - ADD CATEGORIES */
@@ -167,7 +167,7 @@ con.connect(err => {
          if (err) throw err;
 
          /* Prepare */
-         let { id, mainImageId, name, subtitle, price, discount, shortDescription, details, recommendation, hidden, stock } = request.body;
+         let { id, mainImageId, name, subtitle, price, discount, shortDescription, details, recommendation, hidden, stock, displayOrder } = request.body;
          hidden = hidden === "hidden";
          recommendation = recommendation === "true";
          filenames.reverse();
@@ -184,20 +184,10 @@ con.connect(err => {
          if(!categories.length) categories.push(0);
 
          /* 1 - ADD PRODUCT TO PRODUCTS TABLE */
-         const values = [name, subtitle, price, discount, shortDescription, details, recommendation, hidden, stock, id];
-         const query = 'UPDATE products SET name = ?, subtitle = ?, price = ?, discount = ?, description = ?, details = ?, recommendation = ?, hidden = ?, stock = ? WHERE id = ?';
+         const values = [name, subtitle, price, discount, shortDescription, details, recommendation, hidden, stock, displayOrder, id];
+         const query = 'UPDATE products SET name = ?, subtitle = ?, price = ?, discount = ?, description = ?, details = ?, recommendation = ?, hidden = ?, stock = ?, display_order = ? WHERE id = ?';
          con.query(query, values, (err, res) => {
             if(res) {
-               /* HERE WE HAVE TO CHECK WHETHER WE HAVE TO SEND NOTIFICATION TO CLIENT */
-               got.post("https://aloes.skylo-test3.pl/notification/check-notifications", {
-                  json: { productId: id },
-                  responseType: "json"
-               })
-                   .then(res => {
-                      console.log("RESPONSE...");
-                      console.log(res.data);
-                   });
-
                /* 2 - ADD CATEGORIES */
                categories.forEach((item, index, array) => {
                   const valuesDelete = [id];
@@ -243,7 +233,7 @@ con.connect(err => {
                               const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                               con.query(query, values, (err, res) => {
                                  if(res) response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=1");
-                                 else response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
+                                 else response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=1");
                               });
                            }
                         }
@@ -269,7 +259,7 @@ con.connect(err => {
                                        const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                                        con.query(query, values, (err, res) => {
                                           if(res) response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=1");
-                                          else response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
+                                          else response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=1");
                                        });
                                     }
                                     else {
@@ -302,7 +292,7 @@ con.connect(err => {
 
    /* GET RECOMMENDATIONS */
    router.get('/get-recommendations', (request, response) => {
-      const query = 'SELECT *, p.id as product_id FROM products p JOIN images i ON p.main_image = i.id WHERE recommendation = 1 LIMIT 5';
+      const query = 'SELECT *, p.id as product_id FROM products p JOIN images i ON p.main_image = i.id WHERE recommendation = 1 AND stock > 0 ORDER BY p.display_order LIMIT 5';
       con.query(query, (err, res) => {
          if(res) {
             response.send({
@@ -319,7 +309,7 @@ con.connect(err => {
 
    /* GET DISCOUNTS */
    router.get('/get-discounts', (request, response) => {
-      const query = 'SELECT *, p.id as product_id FROM products p JOIN images i ON p.main_image = i.id WHERE discount IS NOT NULL and discount != 0 LIMIT 5';
+      const query = 'SELECT *, p.id as product_id FROM products p JOIN images i ON p.main_image = i.id WHERE discount IS NOT NULL and discount != 0 AND stock > 0 ORDER BY p.display_order LIMIT 5';
       con.query(query, (err, res) => {
          if(res) {
             response.send({
@@ -354,7 +344,27 @@ con.connect(err => {
       const query = 'SELECT p.id as product_id, p.name, p.subtitle, i.file_path as image, p.price, p.discount, p.date, p.stock, COALESCE(c.name, "Brak") as category_name, p.hidden FROM products p ' +
       'LEFT OUTER JOIN product_categories pc ON pc.product_id = p.id ' +
           'LEFT OUTER JOIN categories c ON c.id = pc.category_id ' +
-      'LEFT OUTER JOIN images i ON p.main_image = i.id GROUP BY p.id ORDER BY p.date DESC';
+      'LEFT OUTER JOIN images i ON p.main_image = i.id GROUP BY p.id ORDER BY p.display_order DESC';
+
+      con.query(query, (err, res) => {
+         if(res) {
+            response.send({
+               result: res
+            });
+         }
+         else {
+            response.send({
+               result: null
+            });
+         }
+      });
+   });
+
+   router.get("/get-all-available-products", (request, response) => {
+      const query = 'SELECT p.id as product_id, p.name, p.subtitle, i.file_path as image, p.price, p.discount, p.date, p.stock, COALESCE(c.name, "Brak") as category_name, p.hidden FROM products p ' +
+          'LEFT OUTER JOIN product_categories pc ON pc.product_id = p.id ' +
+          'LEFT OUTER JOIN categories c ON c.id = pc.category_id ' +
+          'LEFT OUTER JOIN images i ON p.main_image = i.id WHERE p.stock > 0 GROUP BY p.id ORDER BY p.display_order DESC';
 
       con.query(query, (err, res) => {
          if(res) {
@@ -394,8 +404,8 @@ con.connect(err => {
       const { name } = request.body;
       const values = [name];
       /* Query uses custom MySQL function - SPLIT_STR */
-      const query = 'SELECT p.id as id, p.name, p.subtitle, p.price, ' +
-          'p.description, p.details, p.discount, p.date, i.file_path as file_path ' +
+      const query = 'SELECT p.id as id, p.name, p.subtitle, p.price, p.display_order, p.stock, ' +
+          'p.description, p.details, p.discount, DATE_ADD(p.date, INTERVAL 2 HOUR), i.file_path as file_path ' +
           'FROM products p LEFT OUTER JOIN images i ON i.id = p.main_image ' +
           'WHERE REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LOWER(SPLIT_STR(p.name, "/", 1)), "ł", "l"), "ę", "e"), "ą", "a"), "ć", "c"), "ń", "n"), "ó", "o"), "ś", "s"), "ź", "z"), "ż", "z") = ?';
       con.query(query, values, (err, res) => {
@@ -447,7 +457,7 @@ con.connect(err => {
    router.post("/single-product", (request, response) => {
       const { id } = request.body;
       const values = [id];
-      const query = 'SELECT p.id as id, p.name, p.subtitle, p.price, ' +
+      const query = 'SELECT p.id as id, p.name, p.subtitle, p.price, p.display_order, p.stock, ' +
           'p.description, p.discount, p.stock, p.details, p.date, p.recommendation, p.hidden, ' +
           'i.file_path as file_path ' +
           'FROM products p ' +
@@ -490,7 +500,7 @@ con.connect(err => {
    router.post("/get-products-by-category", (request, response) => {
       const { id } = request.body;
       const values = [id];
-      const query = 'SELECT *, p.id as product_id, i.file_path as image FROM products p JOIN images i ON p.main_image = i.id JOIN product_categories pc ON pc.product_id = p.id WHERE pc.category_id = ?';
+      const query = 'SELECT *, p.id as product_id, i.file_path as image, p.display_order FROM products p JOIN images i ON p.main_image = i.id JOIN product_categories pc ON pc.product_id = p.id WHERE pc.category_id = ? AND p.stock > 0 ORDER BY p.display_order';
       con.query(query, values, (err, res) => {
          if(res) {
             response.send({

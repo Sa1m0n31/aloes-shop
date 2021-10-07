@@ -32,8 +32,6 @@ const PanelProductsContent = () => {
     }
 
     const deleteProductById = () => {
-        console.log("deleting product....");
-        console.log(candidate);
         deleteProduct(candidate)
             .then(res => {
                 if(res.data.result === 1) setDeleteMsg("Produkt został usunięty");

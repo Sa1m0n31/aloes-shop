@@ -7,6 +7,10 @@ const getAllProducts = () => {
     return axios.get(`${API_URL}/product/get-all-products`);
 }
 
+const getAllAvailableProducts = () => {
+    return axios.get(`${API_URL}/product/get-all-available-products`)
+}
+
 const getProductDetails = (id) => {
     return axios.post(`${API_URL}/product/single-product`, { id });
 }
@@ -36,4 +40,4 @@ const deleteProduct = (id) => {
     return axios.post(`${API_URL}/product/delete`, { id });
 }
 
-export { getAllProducts, deleteProductById, getProductDetails, addAllergens, getNewId, getProductGallery, deleteProduct, getProductCategories };
+export { getAllProducts, getAllAvailableProducts, deleteProductById, getProductDetails, addAllergens, getNewId, getProductGallery, deleteProduct, getProductCategories };

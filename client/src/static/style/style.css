@@ -928,6 +928,13 @@ a {
     margin: 40px auto;
 }
 
+.productNotAvailable {
+    font-size: 17px;
+    font-weight: 700;
+    text-align: center;
+    color: #941212;
+}
+
 .single__imgWrapper {
     border: 3px solid #BBBBBB;
     width: 40%;
@@ -1050,7 +1057,7 @@ a {
 }
 
 .cart__item {
-    height: 150px;
+    height: 180px;
     margin-bottom: 30px;
     padding-bottom: 30px;
     border-bottom: 1px solid rgba(106, 106, 106, .25);
@@ -1116,6 +1123,7 @@ a {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height: 100%;
 }
 
 .removeFromCartBtn {
@@ -1429,7 +1437,7 @@ a {
     padding: 3px 10px;
 }
 
-.singleOrder {
+.singleOrder, .singleSell {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -1437,6 +1445,37 @@ a {
     padding: 15px 0;
     margin: 15px 0;
     border-bottom: 1px solid #BBBBBB;
+}
+
+.singleOrder__item__button {
+    background: transparent;
+    display: block;
+    margin: 5px auto 0;
+    border: none;
+    outline: none;
+}
+
+.singleOrder__item__button__img {
+    width: 20px;
+    height: auto;
+}
+
+.singleOrder__item__img {
+    height: 100px;
+    width: auto;
+}
+
+.singleOrder__paymentLink {
+    font-size: 12px;
+    text-transform: uppercase;
+    margin: 5px auto;
+    display: block;
+    border: 1px solid var(--brown);
+    padding: 3px;
+}
+
+.rotate180 {
+    transform: rotateX(180deg);
 }
 
 .singleOrder__item__key {
@@ -1495,4 +1534,48 @@ input[type=checkbox] {
 
 .red {
     color: #941212;
+}
+
+/* Start baner */
+.baner {
+    background: rgba(0, 0, 0, .75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 99999;
+    transition: .4s all;
+}
+
+.baner__inner {
+    width: clamp(200px, 80vw, 600px);
+    padding: 50px 30px;
+    background: #fff;
+    border: 2px solid #976C2B;
+    position: relative;
+}
+
+.baner__inner__header {
+    margin: 20px auto;
+    font-size: 17px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.baner__inner__header--gold {
+    color: var(--brown);
+    font-weight: 700;
+}
+
+.baner__inner__link {
+    display: block;
+    text-align: center;
+    margin: auto;
+    color: var(--brown);
+    text-decoration: underline;
+    font-weight: 700;
 }

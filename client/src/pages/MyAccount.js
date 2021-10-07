@@ -10,7 +10,7 @@ import lockIcon from '../static/img/lock.svg'
 import locationIcon from "../static/img/location.svg";
 import {
     addUser,
-    changeUserPassword,
+    changeUserPassword, getOrderSells,
     getUserData,
     getUserOrders, updateCompany,
     updateUser,
@@ -49,6 +49,7 @@ const MyAccount = () => {
     const [companyAddress, setCompanyAddress] = useState("");
     const [companyCity, setCompanyCity] = useState("");
     const [companyPostalCode, setCompanyPostalCode] = useState("");
+    const [sells, setSells] = useState([]);
 
     useEffect(() => {
         getUserData(userId)
@@ -71,7 +72,23 @@ const MyAccount = () => {
 
         getUserOrders(userId)
             .then(res => {
-                setOrders(res?.data?.result);
+                const result = res?.data?.result;
+                if(result) {
+                    setOrders(res?.data?.result);
+
+                    let sellsTmp = [];
+                    result.forEach(async (item, index, array) => {
+                        await getOrderSells(item.id)
+                            .then((res) => {
+                               sellsTmp.push(res?.data?.result);
+                               if(index === array.length-1) {
+                                   setTimeout(() => {
+                                       setSells(sellsTmp);
+                                   }, 1000);
+                               }
+                            });
+                    })
+                }
             });
     }, []);
 
@@ -165,10 +182,13 @@ const MyAccount = () => {
                         {orders?.length ? orders?.map((item, index) => {
                             return <SingleOrder key={index}
                                                 id={item.id}
+                                                sells={sells[index]}
                                                 date={item.date}
+                                                paymentId={item.przelewy24_id}
                                                 orderStatus={item.order_status}
                                                 paymentStatus={item.payment_status}
-                                                orderValue={item.order_value} />
+                                                paymentLink={item.payment_link}
+                                                orderValue={item.order_value.toFixed(2)} />
                         }) : <h4 className="noOrdersHeader">
                             Brak zamówień
                         </h4> }

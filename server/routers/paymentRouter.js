@@ -55,7 +55,7 @@ con.connect(err => {
         let postData = {
             amount: amount,
             externalId: sessionId,
-            description: "Płatność za zakupy w sklepie Aloes",
+            description: "Płatność za zakupy w sklepie Caloe",
             buyer: {
                 email: email
             }
@@ -74,7 +74,9 @@ con.connect(err => {
         })
             .then(res => {
                 response.send({
-                    result: res.body
+                    result: res.body,
+                    token: idempotency,
+                    signature: signature
                 });
             })
             .then(err => {
@@ -91,103 +93,11 @@ con.connect(err => {
             }
         })
             .then(res => {
-               console.log(res.body);
                response.send({
                    result: res.body
                });
             });
     });
-
-
-    /* Payment - verify */
-    router.post("/verify", async (request, response) => {
-        let merchantId = request.body.merchantId;
-        let posId = request.body.posId;
-        let sessionId = request.body.sessionId;
-        let amount = request.body.amount;
-        let currency = request.body.currency;
-        let orderId = request.body.orderId;
-
-        response.sendStatus(200);
-
-        /* Get data */
-        const query = 'SELECT * FROM przelewy24 WHERE id = 1';
-        con.query(query, (err, res) => {
-            let crc = res[0].crc;
-
-            /* Calculate SHA384 checksum */
-            let hash, data, gen_hash;
-            hash = crypto.createHash('sha384');
-            data = hash.update(`{"sessionId":"${sessionId}","orderId":${orderId},"amount":${amount},"currency":"PLN","crc":"${crc}"}`, 'utf-8');
-            gen_hash= data.digest('hex');
-
-            got.put("https://sandbox.przelewy24.pl/api/v1/transaction/verify", {
-                json: {
-                    merchantId,
-                    posId,
-                    sessionId,
-                    amount,
-                    currency,
-                    orderId,
-                    sign: gen_hash
-                },
-                responseType: 'json',
-                headers: {
-                    'Authorization': 'Basic MTM4MzU0OjU0Nzg2ZGJiOWZmYTY2MzgwOGZmNGExNWRiMzI3MTNm' // tmp
-                }
-            })
-                .then(res => {
-                    if(res.body.data.status === 'success') {
-                        /* Change value in databse - payment complete */
-                        const values = [sessionId];
-                        const query = 'UPDATE orders SET payment_status = "opłacone" WHERE przelewy24_id = ?';
-                        con.query(query, values, (err, res) => {
-                            console.log("UPDATING PAYMENT STATUS");
-                            console.log(err);
-                        });
-
-                        /* Decrement stock */
-                        const queryStock = 'SELECT * FROM orders o JOIN sells s ON o.id = s.order_id WHERE przelewy24_id = ?';
-                        con.query(queryStock, values, (err, res) => {
-                            if(res) {
-                                if(res) {
-                                    JSON.parse(JSON.stringify(res)).forEach(item => {
-                                         decrementStock(item.product_id, item.size, item.quantity);
-                                    });
-                                }
-                            }
-                        });
-                    }
-                    else {
-                        const values = [sessionId];
-                        const query = 'UPDATE orders SET payment_status = "niepowodzenie" WHERE przelewy24_id = ?';
-                        con.query(query, values, (err, res) => {
-                            console.log("UPDATING PAYMENT STATUS");
-                            console.log(err);
-                        });
-                    }
-                })
-
-            response.send({
-                status: "OK"
-            });
-        });
-    });
-
-    const decrementStock = (productId, size, quantity) => {
-        const values = [quantity, productId, size];
-        const query1 = 'UPDATE products_stock ps JOIN products p ON ps.id = p.stock_id SET ps.size_1_stock = ps.size_1_stock - ? WHERE p.id = ? AND size_1_name = ?'
-        const query2 = 'UPDATE products_stock ps JOIN products p ON ps.id = p.stock_id SET ps.size_2_stock = ps.size_2_stock - ? WHERE p.id = ? AND size_2_name = ?'
-        const query3 = 'UPDATE products_stock ps JOIN products p ON ps.id = p.stock_id SET ps.size_3_stock = ps.size_3_stock - ? WHERE p.id = ? AND size_3_name = ?'
-        const query4 = 'UPDATE products_stock ps JOIN products p ON ps.id = p.stock_id SET ps.size_4_stock = ps.size_4_stock - ? WHERE p.id = ? AND size_4_name = ?'
-        const query5 = 'UPDATE products_stock ps JOIN products p ON ps.id = p.stock_id SET ps.size_5_stock = ps.size_5_stock - ? WHERE p.id = ? AND size_5_name = ?'
-
-        con.query(query1, values);
-        con.query(query2, values);
-        con.query(query3, values);
-        con.query(query4, values);
-        con.query(query5, values);
-    }
 });
 
 module.exports = router;

@@ -9,6 +9,8 @@ import { getDate, getTime } from "../helpers/formatFunctions";
 import { orderSearch, sortByDate } from "../helpers/search";
 import closeImg from "../static/img/close.png";
 import Modal from "react-modal";
+import {getPaymentStatus} from "../helpers/paymentFunctions";
+import SingleOrder from "./SingleOrder";
 
 const PanelOrdersContent = () => {
     const [orders, setOrders] = useState([]);
@@ -19,14 +21,28 @@ const PanelOrdersContent = () => {
 
     const [filterOplacone, setFilterOplacone] = useState(true);
     const [filterNieoplacone, setFilterNieoplacone] = useState(true);
+    const [paymentStatuses, setPaymentStatuses] = useState([]);
 
     useEffect(() => {
         getAllOrders()
             .then(res => {
                 const result = res.data.result;
-                console.log(result);
-                setOrders(result?.reverse());
+                setOrders(result);
                 sessionStorage.setItem('skylo-e-commerce-orders', JSON.stringify(result));
+                let tmpPaymentStatuses = [];
+                console.log(result);
+                result.forEach(async (item, index, array) => {
+                    console.log(item);
+                    await getPaymentStatus(item.przelewy24_id)
+                        .then((res) => {
+                            console.log(res.data.result);
+                            tmpPaymentStatuses.push(JSON.parse(res.data.result).status);
+                            if(index === array.length-3) {
+                                console.log("end");
+                                setPaymentStatuses(tmpPaymentStatuses);
+                            }
+                        });
+                })
             });
     }, [deleteMsg]);
 
@@ -52,6 +68,10 @@ const PanelOrdersContent = () => {
         setModal(false);
         setDeleteMsg("");
     }
+
+    useEffect(() => {
+        console.log(paymentStatuses);
+    }, [paymentStatuses]);
 
     return <main className="panelContent">
         <Modal
@@ -121,87 +141,7 @@ const PanelOrdersContent = () => {
             <main className="panelContent__content">
                 {orders?.map((item, index) => {
                     if(((filterOplacone)&&(filterNieoplacone))||((filterOplacone)&&(item.payment_status.toLowerCase() === "opłacone"))||((filterNieoplacone)&&(item.payment_status.toLowerCase() === "nieopłacone"))) {
-                        return <section className="panelContent__item orderItem">
-                            <section className="panelContent__column">
-                                <h4 className="panelContent__column__label">
-                                    Id
-                                </h4>
-                                <h3 className="panelContent__column__value">
-                                    {item.id}
-                                </h3>
-                            </section>
-
-                            <section className="panelContent__column">
-                                <h4 className="panelContent__column__label">
-                                    Adres email
-                                </h4>
-                                <h3 className="panelContent__column__value">
-                                    {item.email}
-                                </h3>
-                            </section>
-
-                            <section className="panelContent__column">
-                                <h4 className="panelContent__column__label">
-                                    Data zamówienia
-                                </h4>
-                                <h3 className="panelContent__column__value">
-                            <span className="dateTime">
-                                { getDate(item.date) }
-                            </span>
-                                    <span className="dateTime">
-                                    { getTime(item.date) }
-                            </span>
-                                </h3>
-                            </section>
-
-                            <section className="panelContent__column">
-                                <h4 className="panelContent__column__label">
-                                    Płatność
-                                </h4>
-                                <h3 className="panelContent__column__value">
-                            <span className={item.payment_status.toLowerCase() === "opłacone" ? "panelContent__column__status status--positive" : "panelContent__column__status status--negative"}>
-                                {item.payment_status}
-                            </span>
-                                </h3>
-                            </section>
-
-                            <section className="panelContent__column">
-                                <h4 className="panelContent__column__label">
-                                    Status zamówienia
-                                </h4>
-                                <h3 className="panelContent__column__value">
-                                    <span className={item.order_status.toLowerCase() === "zrealizowane" ? "panelContent__column__status status--positive" : "panelContent__column__status status--negative"}>
-                                {item.order_status}
-                            </span>
-                                </h3>
-                            </section>
-
-                            <section className="panelContent__column">
-                                <h4 className="panelContent__column__label">
-                                    Komentarz
-                                </h4>
-                                <h3 className="panelContent__column__value">
-                                    {item.order_comment ? item.order_comment : "BRAK"}
-                                </h3>
-                            </section>
-
-                            <section className="panelContent__column">
-                                <h4 className="panelContent__column__label">
-                                    Działania
-                                </h4>
-                                <div className="panelContent__column__value panelContent__column__value--buttons">
-                                    <button className="panelContent__column__btn">
-                                        <a className="panelContent__column__link" href={"/panel/szczegoly-zamowienia?id=" + item.id}>
-                                            <img className="panelContent__column__icon" src={exit} alt="przejdz" />
-                                        </a>
-                                    </button>
-                                    <button className="panelContent__column__btn" onClick={() => { openModal(item.id) }}>
-                                        <img className="panelContent__column__icon" src={trash} alt="usuń" />
-                                    </button>
-                                </div>
-                            </section>
-
-                        </section>
+                        return <SingleOrder item={item} />
                     }
                     else {
                         return "";

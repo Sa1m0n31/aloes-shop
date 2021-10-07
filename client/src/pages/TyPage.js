@@ -16,7 +16,9 @@ const TyPage = () => {
             getPaymentStatus(paymentId)
                 .then(res => {
                     const result = res?.data?.result;
+                    console.log(result);
                     if(result) {
+                        console.log(paymentId);
                         updatePaymentStatus(paymentId, "opłacone");
                     }
                 });

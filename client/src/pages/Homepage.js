@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import SiteHeader from "../components/SiteHeader";
 import SiteMenu from "../components/SiteMenu";
 import HeroSection from "../components/HeroSection";
@@ -8,10 +8,18 @@ import AboutProducent from "../components/AboutProducent";
 import IconsSection from "../components/IconsSection";
 import SiteHeaderMobile from "../components/SiteHeaderMobile";
 import AddedToCart from "../components/AddedToCart";
+import StartBaner from "../components/StartBaner";
 
 const Homepage = () => {
+    useEffect(() => {
+        if(!sessionStorage.getItem('caloe-baner')) {
+            sessionStorage.setItem('caloe-baner', 'true');
+        }
+    }, []);
+
     return <div className="container homepage">
         <AddedToCart />
+        {sessionStorage.getItem('caloe-baner') ? "" : <StartBaner />}
 
         <SiteHeader />
         <SiteHeaderMobile />

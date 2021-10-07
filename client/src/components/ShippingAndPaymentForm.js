@@ -10,7 +10,13 @@ import phoneIcon from "../static/img/phone.svg";
 import mailIcon from "../static/img/mail.svg";
 import {CartContext} from "../App";
 import {getAllShippingMethods} from "../admin/helpers/shippingFunctions";
-import {addNewOrder, addSell, changePaymentId, checkCouponCode} from "../admin/helpers/orderFunctions";
+import {
+    addNewOrder,
+    addSell,
+    changePaymentId,
+    changePaymentLink,
+    checkCouponCode, sendOrderInfo
+} from "../admin/helpers/orderFunctions";
 import Modal from 'react-modal';
 import GeolocationWidget from "./GeolocationWidget";
 import closeImg from '../static/img/close.png'
@@ -78,7 +84,7 @@ const ShippingAndPaymentForm = () => {
         let sum = 0;
         cartContent?.forEach((item, index, array) => {
             sum += item.price * item.amount;
-            if(index === array.length-1) setSum(sum);
+            if(index === array.length-1) setSum(parseFloat(sum.toFixed(2)));
         });
 
         getAllShippingMethods()
@@ -175,8 +181,7 @@ const ShippingAndPaymentForm = () => {
         },
         enableReinitialize: true,
         validationSchema,
-        onSubmit: ({email, password, fullName, phoneNumber, postalCode, city, street, address, companyName, nip, companyAddress, companyPostalCode, companyCity}) => {
-            console.log("submit");
+        onSubmit: ({email, fullName, phoneNumber, postalCode, city, street, address, companyName, nip, companyAddress, companyPostalCode, companyCity}) => {
             if((shipping !== -1)&&(payment !== -1)) {
                 console.log("subbmitting");
                 const sessionId = uuidv4();
@@ -185,7 +190,6 @@ const ShippingAndPaymentForm = () => {
                 if(!isAuth) {
                     addUser(email, null, fullName, phoneNumber, null, null, null, null, null, null, null, null)
                         .then(res => {
-                            console.log(res.data.result);
                             if(res.data.result === -1) {
                                 setAccountExistsError("Istnieje konto o podanym adresie email. Aby dokonać zakupu, zaloguj się.");
                             }
@@ -220,40 +224,38 @@ const ShippingAndPaymentForm = () => {
                     if(orderId) {
                         /* Add sells */
                         const cart = JSON.parse(localStorage.getItem('sec-cart'));
-                        cart?.forEach((item, cartIndex) => {
+                        cart?.forEach((item, cartIndex, cartArray) => {
                             /* Add sells */
-                            addSell(orderId, item, payment);
+                            addSell(orderId, item, payment)
+                                .then((res) => {
+                                    if(cartIndex === cartArray.length-1) {
+                                        sendOrderInfo(orderId)
+                                            .then((res) => {
+                                                /* PAYMENT PROCESS */
+                                                axios.post(`${settings.API_URL}/payment/payment`, {
+                                                    sessionId,
+                                                    email: formik.values.email,
+                                                    amount: sum + shippingCost - discountInPLN
+                                                })
+                                                    .then(res => {
+                                                        /* Remove cart from local storage */
+                                                        localStorage.removeItem('sec-cart');
+
+                                                        const redirectUrl = res.data.result.redirectUrl;
+                                                        const paymentId = res.data.result.paymentId;
+
+                                                        changePaymentLink(orderId, redirectUrl)
+                                                            .then((res) => {
+                                                                changePaymentId(orderId, paymentId)
+                                                                    .then(res => {
+                                                                        window.location.href = `${redirectUrl}`;
+                                                                    });
+                                                            });
+                                                    });
+                                            });
+                                    }
+                                })
                         });
-                        console.log("orderId");
-
-                        if(payment === 2) {
-                            /* Platnosc za pobraniem */
-                            localStorage.setItem('sec-ty', 'true');
-                            window.location = "/dziekujemy";
-
-                            /* Remove cart from local storage */
-                            localStorage.removeItem('sec-cart');
-                        }
-                        else {
-                            /* PAYMENT PROCESS */
-                            axios.post(`${settings.API_URL}/payment/payment`, {
-                                sessionId,
-                                email: formik.values.email,
-                                amount: sum + shippingCost - discountInPLN
-                            })
-                                .then(res => {
-                                    /* Remove cart from local storage */
-                                    localStorage.removeItem('sec-cart');
-
-                                    const redirectUrl = res.data.result.redirectUrl;
-                                    const paymentId = res.data.result.paymentId;
-
-                                    changePaymentId(orderId, paymentId)
-                                        .then(res => {
-                                            window.location.href = `${redirectUrl}`;
-                                        });
-                                });
-                        }
                     }
                     else {
                         window.location = "/";

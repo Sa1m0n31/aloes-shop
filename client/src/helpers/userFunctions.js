@@ -18,6 +18,14 @@ const getUserOrders = (id) => {
     return axios.post(`${API_URL}/user/get-user-orders`, { id });
 }
 
+const getOrderSells = (id) => {
+    return axios.get(`${API_URL}/order/get-order-sells`, {
+        params: {
+            id
+        }
+    });
+}
+
 const loginUser = (username, password) => {
     return axios.post(`${API_URL}/auth/login-user`, {
         username, password
@@ -44,4 +52,4 @@ const userLogout = (sessionKey) => {
     return axios.post(`${API_URL}/auth/logout`, { sessionKey });
 }
 
-export { addUser, loginUser, changeUserPassword, getUserData, getUserOrders, updateUser, userLogout, updateCompany }
+export { addUser, loginUser, changeUserPassword, getUserData, getUserOrders, updateUser, userLogout, updateCompany, getOrderSells }

@@ -25,7 +25,6 @@ const SingleProduct = () => {
 
     useEffect(() => {
         /* Get product info */
-        console.log(convertToString(window.location.pathname.split("/")[2]));
         getProductByName(convertToString(window.location.pathname.split("/")[2]))
             .then(res => {
                 const result = res.data?.result;
@@ -97,9 +96,11 @@ const SingleProduct = () => {
 
                         </p>
                     </main>
-                    <button className="button button--singleAddToCart" onClick={() => { addProductToCart(product.id, product.name, 1, product.file_path, product.discount ? product.discount : product.price); }}>
+                    {product.stock ? <button className="button button--singleAddToCart" onClick={() => { addProductToCart(product.id, product.name, 1, product.file_path, product.discount ? product.discount : product.price); }}>
                         Dodaj do koszyka
-                    </button>
+                    </button> : <h3 className="productNotAvailable">
+                        Produkt niedostępny
+                    </h3>}
                 </article>
             </main>
 

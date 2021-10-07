@@ -14,7 +14,7 @@ import {getAllCategories, getCategoryBySlug} from "../admin/helpers/categoriesFu
 import settings from "../admin/helpers/settings";
 import axios from "axios";
 import {getProductsByCategory, showAddedToCartModal} from "../helpers/productFunctions";
-import {getAllProducts} from "../admin/helpers/productFunctions";
+import {getAllAvailableProducts, getAllProducts} from "../admin/helpers/productFunctions";
 import { CartContext } from '../App'
 import AddedToCart from "../components/AddedToCart";
 import convertToURL from "../helpers/convertToURL";
@@ -61,7 +61,7 @@ const ShopPage = () => {
                 }
                 else {
                     /* Shop page => Get all products */
-                    getAllProducts()
+                    getAllAvailableProducts()
                         .then(res => {
                             if(res?.data?.result) {
                                 setProducts(res.data.result);

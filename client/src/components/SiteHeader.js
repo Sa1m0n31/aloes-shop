@@ -30,7 +30,7 @@ const SiteHeader = () => {
         let sum = 0;
         cartContent?.forEach((item, index, array) => {
             sum += item.amount * item.price;
-            if(index === array.length-1) setCartSum(sum);
+            if(index === array.length-1) setCartSum(sum.toFixed(2));
         });
     }, []);
 
@@ -81,9 +81,9 @@ const SiteHeader = () => {
                 </form>
             </section>
 
-            <section className="siteHeader__bottom__subsection">
+            <a className="siteHeader__bottom__subsection" href="/">
                 <img className="siteHeader__caloeLogo" src={caloeLogo} alt="caloe-produkty-aloesowe" />
-            </section>
+            </a>
 
             <section className="siteHeader__bottom__subsection d-desktop">
                 <a className="siteHeader__bottom__btn" href="/zaloguj-sie">

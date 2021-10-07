@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const con = require("../databaseConnection");
+const got = require("got");
 
 const nodemailer = require("nodemailer");
 const smtpTransport = require('nodemailer-smtp-transport');
@@ -8,12 +9,12 @@ const smtpTransport = require('nodemailer-smtp-transport');
 /* Nodemailer */
 let transporter = nodemailer.createTransport(smtpTransport ({
     auth: {
-        user: 'test@skylo-test2.pl',
-        pass: 'SwinkaPeppa-31'
+        user: 'powiadomienia@skylo-pl.atthost24.pl',
+        pass: '***** *** (Sw...)'
     },
     host: 'skylo-pl.atthost24.pl',
     secureConnection: true,
-    port: 587,
+    port: 465,
     tls: {
         rejectUnauthorized: false
     },
@@ -22,7 +23,7 @@ let transporter = nodemailer.createTransport(smtpTransport ({
 const sendStatus3Email = (id, email, fullName, letterNumber, response = null) => {
     /* status = ZREALIZOWANE */
     let mailOptions = {
-        from: 'test@skylo-test2.pl',
+        from: 'powiadomienia@skylo-pl.atthost24.pl',
         to: email,
         subject: 'Twoje zamówienie zostało zrealizowane',
         html: `<head>
@@ -34,8 +35,8 @@ const sendStatus3Email = (id, email, fullName, letterNumber, response = null) =>
 </head>
 <body>
 <main style="width: 100%;">
-    <img style="max-width: 100%; width: 800px; margin: 0;" src="https://aloes.skylo-test3.pl/image?url=/media/notification/logo.jpg" alt="zamowienie-zostalo-zrealizowane" />
-    <table style="display: block; padding: 20px; max-width: 100%; width: 800px; background: #59545A; margin-top: -5px; color: #fff; font-weight: 300; font-family: 'Open Sans', sans-serif;">
+    <img style="max-width: 100%; width: 800px; margin: 0;" src="http://aloes.skylo-test3.pl/image?url=/media/notifications/caloe-logo.png" alt="zamowienie-zostalo-zrealizowane" />
+    <table style="display: block; padding: 20px; color: #000; max-width: 100%; width: 800px; background: #f8f8f8; margin-top: -5px; font-weight: 300; font-family: 'Open Sans', sans-serif;">
         <thead>
             <tr>
                <th style="font-weight: 300; display: block; margin-top: 20px; text-align: left;">
@@ -55,30 +56,8 @@ const sendStatus3Email = (id, email, fullName, letterNumber, response = null) =>
                     Informacje o etapach dostarczenia przesyłki dostaniesz bezpośrednio od przewoźnika na adres mailowy podany przy zamówieniu.
                 </td>
             </tr>
-            <tr>
-                <td style="display: block; margin: 20px 0;">
-                    Numer listu przewozowego: ${letterNumber}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <a target="_blank" style="color: #fff;" href="https://inpost.pl/sledzenie-przesylek?number=${letterNumber}">
-                        Śledź paczkę
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td style="display: block; margin-top: 20px; font-weight: 700;">
-                    Ważne!
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Śledzenie przesyłki na stronach firmy przewozowej możliwe jest najwcześniej w godzinach wieczornych w dniu nadania.
-                </td>
-            </tr>
         </tbody>
-        <tfoot style="display: block; border-top: 2px solid #fff; margin: 20px auto;">
+        <tfoot style="display: block; border-top: 2px solid #976c2b; margin: 20px auto;">
             <tr>
                 <td style="display: block; margin-top: 20px;">
                     Pozdrawiamy
@@ -86,20 +65,20 @@ const sendStatus3Email = (id, email, fullName, letterNumber, response = null) =>
             </tr>
             <tr>
                 <td>
-                    Zespół HideIsland
+                    Zespół Caloe.pl
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a style="color: #fff; display: block; margin-top: 20px; text-decoration: none;" href="https://hideisland.pl">
-                        hideisland.pl
+                    <a style="display: block; margin-top: 20px; text-decoration: none;" href="https://caloe.pl">
+                        caloe.pl
                     </a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a style="color: #fff; text-decoration: none;" href="mailto:biuro@hideisland.pl">
-                        biuro@hideisland.pl
+                    <a style="text-decoration: none;" href="mailto:sklep@caloe.pl">
+                        sklep@caloepl
                     </a>
                 </td>
             </tr>
@@ -130,7 +109,7 @@ const sendStatus3Email = (id, email, fullName, letterNumber, response = null) =>
 const sendStatus2Email = (id, email, fullName, response = null) => {
     /* status = PRZYJĘTE DO REALIZACJI */
     let mailOptions = {
-        from: 'test@skylo-test2.pl',
+        from: 'powiadomienia@skylo-pl.atthost24.pl',
         to: email,
         subject: 'Twoje zamówienie zostało przyjęte do realizacji',
         html: `<head>
@@ -142,8 +121,8 @@ const sendStatus2Email = (id, email, fullName, response = null) => {
 </head>
 <body>
 <main style="width: 100%;">
-    <img style="max-width: 100%; width: 800px; margin: 0;" src="https://aloes.skylo-test3.pl/image?url=/media/notification/logo.jpg" alt="zamowienie-zostalo-zrealizowane" />
-    <table style="display: block; padding: 20px; max-width: 100%; width: 800px; background: #59545A; margin-top: -5px; color: #fff; font-weight: 300; font-family: 'Open Sans', sans-serif;">
+    <img style="max-width: 100%; width: 800px; margin: 0;" src="http://aloes.skylo-test3.pl/image?url=/media/notifications/caloe-logo.png" alt="zamowienie-zostalo-zrealizowane" />
+    <table style="display: block; padding: 20px; color: #000; max-width: 100%; width: 800px; background: #f8f8f8; margin-top: -5px; font-weight: 300; font-family: 'Open Sans', sans-serif;">
         <thead>
             <tr>
                <th style="font-weight: 300; display: block; margin-top: 20px; text-align: left;">
@@ -159,7 +138,7 @@ const sendStatus2Email = (id, email, fullName, response = null) => {
         <tbody style="display: block; width: 100%;">
             <tr>
                 <td>
-                    W przypadku pytań lub wątpliwości prosimy o kontakt pod adresem e-mail: <a href="mailto:biuro@hideisland.pl" style="color: #fff; text-decoration: none;">biuro@hideisland.pl</a>.
+                    W przypadku pytań lub wątpliwości prosimy o kontakt pod adresem e-mail: <a href="mailto:sklep@caloe.pl" style="text-decoration: none;">sklep@caloe.pl</a>.
                 </td>
             </tr>
             <tr style="display: block; width: 100%;">
@@ -168,7 +147,7 @@ const sendStatus2Email = (id, email, fullName, response = null) => {
                 </td>
             </tr>
         </tbody>
-        <tfoot style="display: block; border-top: 2px solid #fff; margin: 20px auto;">
+        <tfoot style="display: block; border-top: 2px solid #976c2b; margin: 20px auto;">
             <tr>
                 <td style="display: block; margin-top: 20px;">
                     Pozdrawiamy
@@ -176,20 +155,20 @@ const sendStatus2Email = (id, email, fullName, response = null) => {
             </tr>
             <tr>
                 <td>
-                    Zespół HideIsland
+                    Zespół Caloe.pl
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a style="color: #fff; display: block; margin-top: 20px; text-decoration: none;" href="https://hideisland.pl">
-                        hideisland.pl
+                    <a style="display: block; margin-top: 20px; text-decoration: none;" href="https://caloe.pl">
+                        caloe.pl
                     </a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a style="color: #fff; text-decoration: none;" href="mailto:biuro@hideisland.pl">
-                        biuro@hideisland.pl
+                    <a style="text-decoration: none;" href="mailto:sklep@caloe.pl">
+                        sklep@caloepl
                     </a>
                 </td>
             </tr>
@@ -217,14 +196,183 @@ const sendStatus2Email = (id, email, fullName, response = null) => {
     });
 }
 
-const sendStatus1Email = (id, email, sells) => {
+const sendStatus1Email = (orderInfo, response = null) => {
+    let sells = ``;
+    let sum = 0;
+    for(let i=0; i<orderInfo.length; i++) {
+        sells += `<tr>
+            <td>
+                ${orderInfo[i].name}
+            </td>
+            <td style="font-weight: 700; font-size: 15px; text-align: center; width: 110px;">${orderInfo[i].quantity}</td>
+            <td style="font-weight: 700; font-size: 15px; text-align: center; width: 110px;">${orderInfo[i].price} PLN</td>
+        </tr>`;
 
+        sum += parseInt(orderInfo[i].quantity) * parseFloat(orderInfo[i].price);
+    }
+
+    /* status = ZŁOŻONE */
+    let mailOptions = {
+        from: 'powiadomienia@skylo-pl.atthost24.pl',
+        to: orderInfo[0].email,
+        subject: 'Dziękujemy za złożenie zamówienia w sklepie Caloe',
+        html: `<head>
+    <meta charSet="UTF-8">
+        <title>Title</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin>
+                <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;700;1,300&display=swap"
+                      rel="stylesheet">
+</head>
+<body>
+<main style="width: 100%;">
+    <img style="max-width: 100%; width: 800px; margin: 0;" src="https://aloes.skylo-test3.pl/image?url=/media/notifications/caloe-logo.png" alt="zamowienie-zostalo-zlozone"/>
+    <table
+        style="display: block; padding: 20px; color: #000; max-width: 100%; width: 800px; background: #f8f8f8; margin-top: -5px; font-weight: 300; font-family: 'Open Sans', sans-serif;">
+        <thead style="display: block;">
+        <tr style="display: block;">
+            <th style="font-weight: 300; font-size: 21px; display: block; margin-top: 20px; text-align: center;">
+                Dziękujemy za zamówienie w sklepie Caloe.pl
+            </th>
+        </tr>
+        <tr style="display: block;">
+            <th style="font-weight: 300; display: block; font-size: 21px; text-align: center;">
+                Poniżej znajdują się szczegóły Twojego zamówienia.
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td style="display: block; margin-top: 25px; font-weight: 700;">
+                Kupione przedmioty:
+            </td>
+        </tr>
+        <tr></tr>
+        <tr></tr>
+        ${sells}
+        <tr></tr>
+        <tr></tr>
+        <tr></tr>
+        <tr></tr>
+        <tr></tr>
+        <tr></tr>
+        <tr></tr>
+        <tr></tr>
+        <tr></tr>
+        <tr></tr>
+        <tr style="display: block; margin-top: 15px;">
+            <td style="font-size: 14px; width: 150px;">
+                Wartość produktów:
+            </td>
+            <td style="font-size: 14px;">
+                ${sum} PLN
+            </td>
+        </tr>
+        <tr style="display: block; margin-top: 5px;">
+            <td style="font-size: 14px; width: 150px;">
+                Koszt dostawy:
+            </td>
+            <td style="font-size: 14px;">
+                ${orderInfo[0].shipping_method_price} PLN
+            </td>
+        </tr>
+        <tr style="display: block; margin-top: 5px; border-bottom: 3px solid #976C2B; padding-bottom: 15px;">
+            <td style="font-weight: 700; font-size: 15px; width: 150px;">
+                Razem
+            </td>
+            <td style="font-weight: 700; font-size: 15px;">
+                ${orderInfo[0].order_price} PLN
+            </td>
+        </tr>
+        <tr></tr>
+        <tr></tr>
+        <tr></tr>
+        <tr></tr>
+        <tr></tr>
+        <tr></tr>
+        <tr></tr>
+        <tr></tr>
+        <tr></tr>
+        <tr>
+            <td colSpan="5" style="font-size: 14px;">
+                Drogi kliencie, realizacja Twojego zamówienia nr: ${orderInfo[0].id} rozpocznie się po zaksięgowaniu płatności na
+                naszym koncie. W następnych mailach będziemy Cię informować o kolejnych etapach zamówienia.
+            </td>
+        </tr>
+        <tr></tr>
+        <tr></tr>
+        <tr></tr>
+        </tbody>
+        <tfoot style="display: block; border-top: 2px solid #976c2b; margin: 20px auto;">
+            <tr>
+                <td style="display: block; margin-top: 20px;">
+                    Pozdrawiamy
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Zespół Caloe.pl
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a style="display: block; margin-top: 20px; text-decoration: none;" href="https://caloe.pl">
+                        caloe.pl
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a style="text-decoration: none;" href="mailto:sklep@caloe.pl">
+                        sklep@caloepl
+                    </a>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</main>
+</body>`
+    }
+
+    transporter.sendMail(mailOptions, function(error, info){
+        if(error) {
+            if(response) {
+                response.send({
+                    result: 0
+                })
+            }
+        }
+        else{
+            if(response) {
+                response.send({
+                    result: 1
+                })
+            }
+        }
+    });
 }
 
 con.connect(err => {
+    router.post("/send-order-info", (request, response) => {
+        const { orderId } = request.body;
+
+        const query = 'SELECT o.id, o.order_price, p.name, p.price, s.quantity, s.size, pm.name as payment_method, sm.name as shipping_method, sm.price as shipping_method_price, o.inpost_address, o.inpost_postal_code, o.inpost_city, o.nip, o.company_name, u.email, u.full_name, u.address, u.city, u.postal_code FROM orders o JOIN users u ON u.id = o.user JOIN payment_methods pm ON pm.id = o.payment_method JOIN shipping_methods sm ON sm.id = o.shipping_method JOIN sells s ON s.order_id = o.id JOIN products p ON p.id = s.product_id WHERE o.id = ?';
+        const values = [orderId];
+        con.query(query, values, (err, res) => {
+            if(res) {
+                sendStatus1Email(res, response);
+            }
+            else {
+                response.send({
+                    result: 0
+                });
+            }
+        });
+    });
+
     /* GET ALL ORDERS */
     router.get("/get-orders", (request, response) => {
-        const query = 'SELECT o.id as id, u.full_name, u.email, DATE_ADD(o.date, INTERVAL 2 HOUR) as date, o.payment_status, o.order_status, o.order_comment FROM orders o LEFT OUTER JOIN users u ON o.user = u.id';
+        const query = 'SELECT o.id as id, u.full_name, u.email, DATE_ADD(o.date, INTERVAL 2 HOUR) as date, o.payment_status, o.order_status, o.order_comment, o.przelewy24_id FROM orders o LEFT OUTER JOIN users u ON o.user = u.id ORDER BY o.id DESC';
         con.query(query, (err, res) => {
             if (res) {
                 response.send({
@@ -251,10 +399,8 @@ con.connect(err => {
             const values = [orderId, productId, quantity, size];
             const query = 'INSERT INTO sells VALUES (NULL, ?, ?, ?, ?)';
 
-            if(paymentMethod === 2) {
-                /* Jesli za pobraniem - dekrementuj stan magazynowy */
-                decrementStock(productId, quantity);
-            }
+            /* Dekrementuj stan magazynowy */
+            decrementStock(productId, quantity);
 
             con.query(query, values, (err, res) => {
                 if (res) {
@@ -281,7 +427,7 @@ con.connect(err => {
             }
 
             let values = [paymentMethod, shippingMethod, city, address, postalCode, user, paymentStatus, comment, sessionId, companyName, nip, companyAddress, companyPostalCode, companyCity, amount, inPostAddress, inPostCode, inPostCity];
-            const query = `INSERT INTO orders VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, 'złożone', CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+            const query = `INSERT INTO orders VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, 'złożone', CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)`;
 
             values = values.map((item) => {
                 if (item === "") return null;
@@ -289,14 +435,19 @@ con.connect(err => {
             });
             con.query(query, values, (err, res) => {
                 let result = 0;
-                console.log(res);
-                console.log(err);
                 if (res) {
-                    if (res.insertId) result = res.insertId;
+                    if (res.insertId) {
+                        result = res.insertId;
+                        response.send({
+                            result
+                        });
+                    }
                 }
-                response.send({
-                    result
-                });
+                else {
+                    response.send({
+                        result: 0
+                    });
+                }
             });
         });
 
@@ -305,12 +456,35 @@ con.connect(err => {
             const {id, status} = request.body;
             const values = [status, id];
             const query = 'UPDATE orders SET payment_status = ? WHERE przelewy24_id = ?';
+            console.log(values);
             con.query(query, values, (err, res) => {
                 let result = 0;
                 if (res) result = 1;
+                console.log(err);
+                console.log(res);
                 response.send({
                     result
                 });
+            });
+        });
+
+        router.post("/change-payment-link", (request, response) => {
+            const { id, link } = request.body;
+
+            const query = 'UPDATE orders SET payment_link = ? WHERE id = ?';
+            const values = [link, id];
+
+            con.query(query, values, (err, res) => {
+               if(res) {
+                   response.send({
+                       result: 1
+                   })
+               }
+               else {
+                   response.send({
+                       result: 0
+                   });
+               }
             });
         });
 
@@ -350,42 +524,40 @@ con.connect(err => {
                         result: 0
                     });
                 }
-                // if(res) {
-                //     /* Get order info */
-                //     const query = 'SELECT * FROM orders o JOIN users u ON o.user = u.id WHERE o.id = ?';
-                //     const values = [id];
-                //
-                //     con.query(query, values, (err, res) => {
-                //        if(res) {
-                //            const firstName = res[0].first_name;
-                //            const lastName = res[0].last_name;
-                //            const email = res[0].email;
-                //            const fullName = firstName + " " + lastName;
-                //            /* Send email based on order status */
-                //            if(orderStatus === "przyjęte do realizacji") {
-                //                sendStatus2Email(id, email, fullName, response);
-                //            }
-                //            else if(orderStatus === "zrealizowane") {
-                //                sendStatus3Email(id, email, fullName, letterNumber, response);
-                //            }
-                //            else {
-                //                response.send({
-                //                    result: 1
-                //                });
-                //            }
-                //        }
-                //        else {
-                //            response.send({
-                //                result: 0
-                //            });
-                //        }
-                //     });
-                // }
-                // else {
-                //     response.send({
-                //         result: 0
-                //     });
-                // }
+                if(res) {
+                    /* Get order info */
+                    const query = 'SELECT * FROM orders o JOIN users u ON o.user = u.id WHERE o.id = ?';
+                    const values = [id];
+
+                    con.query(query, values, (err, res) => {
+                       if(res) {
+                           const email = res[0].email;
+                           const fullName = res[0].full_name;
+                           /* Send email based on order status */
+                           if(orderStatus === "przyjęte do realizacji") {
+                               sendStatus2Email(id, email, fullName, response);
+                           }
+                           else if(orderStatus === "zrealizowane") {
+                               sendStatus3Email(id, email, fullName, response);
+                           }
+                           else {
+                               response.send({
+                                   result: 1
+                               });
+                           }
+                       }
+                       else {
+                           response.send({
+                               result: 0
+                           });
+                       }
+                    });
+                }
+                else {
+                    response.send({
+                        result: 0
+                    });
+                }
             });
         });
 
@@ -428,6 +600,26 @@ con.connect(err => {
                 }
             });
         });
+
+        router.get("/get-order-sells", (request, response) => {
+            const id = request.query.id;
+
+            const query = 'SELECT p.name, p.price, i.file_path, s.quantity FROM sells s JOIN orders o ON s.order_id = o.id JOIN products p ON s.product_id = p.id JOIN images i ON i.id = p.main_image WHERE o.id = ?';
+            const values = [id];
+
+            con.query(query, values, (err, res) => {
+                if(res) {
+                    response.send({
+                        result: res
+                    });
+                }
+                else {
+                    response.send({
+                        result: 0
+                    });
+                }
+            });
+        })
 });
 
 module.exports = router;
