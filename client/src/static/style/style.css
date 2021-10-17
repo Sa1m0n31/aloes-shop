@@ -18,7 +18,7 @@
     --siteWidthNarrow: clamp(200px, 75vw, 1500px);
 }
 
-h1, h2, h3, h4, h5, h6, p, label, button, a, li, span, textarea {
+h1, h2, h3, h4, h5, h6, p, label, button, a, li, span, textarea, .CookieConsent * {
     font-family: 'Open sans', sans-serif;
 }
 
@@ -379,6 +379,17 @@ a {
 
 .aboutProducent__text {
     margin-left: 10%;
+}
+
+.aboutProducent__text p, .aboutProducent__text2 p {
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.aboutProducent__text ul {
+    list-style-type: disc;
+    font-size: 14px;
+    margin-left: 30px;
 }
 
 .aboutProducent__text2 {
@@ -1578,4 +1589,33 @@ input[type=checkbox] {
     color: var(--brown);
     text-decoration: underline;
     font-weight: 700;
+}
+
+/* Free delivery */
+.freeDelivery {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    color: #fff;
+    text-align: center;
+    background: var(--brown);
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+}
+
+.dhlModal iframe {
+    width: 90%;
+    height: 95%;
+    margin: auto;
+    display: block;
+}
+
+.CookieConsent *, .cookiesLink {
+    font-size: 15px !important;
+    color: #fff !important;
 }

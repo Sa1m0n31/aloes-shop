@@ -46,6 +46,13 @@ const ShippingAndPaymentForm = () => {
     const [accoundExistsError, setAccountExistsError] = useState("");
     const [shippingError, setShippingError] = useState("");
     const [paymentError, setPaymentError] = useState("");
+    const [dhlModal, setDhlModal] = useState(false);
+
+    const [dhlAddress, setDhlAddress] = useState("");
+    const [dhlCity, setDhlCity] = useState("");
+    const [dhlPostalCode, setDhlPostalCode] = useState("");
+
+    const [submissionDisabled, setSubmissionDisabled] = useState(false);
 
     const { cartContent } = useContext(CartContext);
 
@@ -134,7 +141,7 @@ const ShippingAndPaymentForm = () => {
     }
 
     useEffect(() => {
-        if(shipping !== -1) {
+        if((shipping !== -1)&&(sum < 200)) {
             setShippingCost(getShippingMethodById(shipping).price);
         }
     }, [shipping]);
@@ -183,9 +190,7 @@ const ShippingAndPaymentForm = () => {
         validationSchema,
         onSubmit: ({email, fullName, phoneNumber, postalCode, city, street, address, companyName, nip, companyAddress, companyPostalCode, companyCity}) => {
             if((shipping !== -1)&&(payment !== -1)) {
-                console.log("subbmitting");
                 const sessionId = uuidv4();
-
                 /* Add user */
                 if(!isAuth) {
                     addUser(email, null, fullName, phoneNumber, null, null, null, null, null, null, null, null)
@@ -217,7 +222,7 @@ const ShippingAndPaymentForm = () => {
             /* Add order */
             addNewOrder(payment, shipping, formik.values.address, formik.values.postalCode, formik.values.city, insertedUserId !== -1 && insertedUserId ? insertedUserId : parseInt(localStorage.getItem('sec-user-id')),
                 formik.values.comment, sessionId, formik.values.companyName, formik.values.nip, formik.values.companyAddress, formik.values.companyPostalCode, formik.values.companyCity,
-                sum + shippingCost - discountInPLN, sessionStorage.getItem('paczkomat-adres'), sessionStorage.getItem('paczkomat-kod'), sessionStorage.getItem('paczkomat-miasto'))
+                sum + shippingCost - discountInPLN, sessionStorage.getItem('paczkomat-adres'), sessionStorage.getItem('paczkomat-kod'), sessionStorage.getItem('paczkomat-miasto'), dhlAddress, dhlPostalCode, dhlCity)
                 .then(res => {
                     const orderId = res.data.result;
 
@@ -248,7 +253,7 @@ const ShippingAndPaymentForm = () => {
                                                             .then((res) => {
                                                                 changePaymentId(orderId, paymentId)
                                                                     .then(res => {
-                                                                        window.location.href = `${redirectUrl}`;
+                                                                       window.location.href = `${redirectUrl}`;
                                                                     });
                                                             });
                                                     });
@@ -308,7 +313,26 @@ const ShippingAndPaymentForm = () => {
             document.querySelector("#easypack-search")?.setAttribute('autocomplete', 'off');
             setInPostModal(true);
         }
+        if(id === 4) {
+            setDhlModal(true);
+        }
     }
+
+    useEffect(() => {
+        function listenMessage(msg) {
+            const point = JSON.parse(msg.data);
+            console.log(point);
+            setDhlCity(point.city);
+            setDhlPostalCode(point.zip);
+            setDhlAddress(point.street + " " + point.streetNo + (point.houseNo ? "/" + point.houseNo : ""));
+            setDhlModal(false);
+        }
+        if (window.addEventListener) {
+            window.addEventListener("message", listenMessage, false);
+        } else {
+            window.attachEvent("onmessage", listenMessage);
+        }
+    }, []);
 
     useEffect(() => {
         if(accoundExistsError !== "") {
@@ -326,6 +350,14 @@ const ShippingAndPaymentForm = () => {
         if(payment !== -1) setPaymentError("");
     }, [payment]);
 
+    useEffect(() => {
+        if(submissionDisabled) {
+            setTimeout(() => {
+                setSubmissionDisabled(false);
+            }, 3000);
+        }
+    }, [submissionDisabled]);
+
     Modal.setAppElement(document.querySelector(".shippingAndPayment"));
 
     return <main className="shippingAndPayment">
@@ -340,6 +372,18 @@ const ShippingAndPaymentForm = () => {
             </button>
 
             <GeolocationWidget />
+        </Modal>
+
+        <Modal
+            isOpen={dhlModal}
+            portalClassName="dhlModal"
+            onRequestClose={() => { setDhlModal(false) }}
+        >
+            <button className="modalClose" onClick={() => { setDhlModal(false) }}>
+                <img className="modalClose__img" src={closeImg} alt="zamknij" />
+            </button>
+
+            <iframe src="https://parcelshop.dhl.pl/mapa?country=PL"></iframe>
         </Modal>
 
         <SectionHeader title="Formularz zamówienia" />
@@ -479,11 +523,16 @@ const ShippingAndPaymentForm = () => {
                             <button type="button" className="checkBtn" onClick={() => { changeShipping(item.id); }}>
                                 {shipping === item.id ? <span className="checkBtn--check"></span> : ""}
                             </button>
-                            {item.name} ({item.price} PLN)
+                            {item.name} ({sum >= 200 ? 0 : item.price} PLN)
                         </label>
                             {index === 0 && shipping === 1 ? <span className="label--vat">
                                 {inPostAddress}<br/>
                                 {inPostCode} {inPostCity}
+                            </span> : ""}
+
+                            {index === 3 && shipping === 4 ? <span className="label--vat">
+                                {dhlAddress}<br/>
+                                {dhlPostalCode} {dhlCity}
                             </span> : ""}
                         </>
                     })}
@@ -553,11 +602,11 @@ const ShippingAndPaymentForm = () => {
                         Podsumowanie
                     </h3>
                     <h4 className="cart__item__value">
-                        {sum + shippingCost} PLN
+                        {(sum + shippingCost).toFixed(2)} PLN
                     </h4>
                 </section>
 
-                <button type="submit" className="button button--shippingAndPayment">
+                <button type="submit" className="button button--shippingAndPayment" disabled={submissionDisabled}>
                     Zamawiam
                 </button>
             </section>

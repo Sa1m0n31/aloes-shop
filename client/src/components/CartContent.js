@@ -4,7 +4,6 @@ import settings from "../helpers/settings";
 import { CartContext } from '../App';
 import trashIcon from '../static/img/trash.svg'
 import SectionHeader from "./SectionHeader";
-import example from '../static/img/example3.png'
 
 const CartContent = () => {
     const { cartContent, editCart, removeFromCart } = useContext(CartContext);
@@ -34,11 +33,15 @@ const CartContent = () => {
         calculateCartSum();
     }, [currentCart]);
 
-    const handleInputClick = (e) => {
-        e.target.select();
-    };
-
     return <section className="cartContent">
+        <aside className="freeDelivery">
+            {200 - sum > 0 ? <span>
+                Do darmowej dostawy brakuje {(200 - sum).toFixed(2)} zł
+            </span> : <span>
+                Gratulacje! Dzięki wartości zamówienia powyżej 200 zł nie zapłacisz za dostawę!
+            </span>}
+        </aside>
+
         {cartContent?.length ? <main className="page cart">
             <SectionHeader title="Twój koszyk" />
 

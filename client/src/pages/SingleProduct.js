@@ -20,6 +20,7 @@ import AddedToCart from "../components/AddedToCart";
 const SingleProduct = () => {
     const [product, setProduct] = useState("");
     const [gallery, setGallery] = useState([]);
+    const [category, setCategory] = useState("");
 
     const { addToCart } = useContext(CartContext);
 
@@ -31,7 +32,13 @@ const SingleProduct = () => {
                 console.log(res.data?.result);
                 if(result) {
                     const productInfo = result[0];
+                    console.log(productInfo);
                     setProduct(productInfo);
+
+                    getProductCategories(productInfo.id)
+                        .then((res) => {
+                            setCategory(res.data.result[0]?.name);
+                        });
 
                     /* Get product gallery */
                     axios.post(`${settings.API_URL}/product/get-gallery`, {
@@ -62,7 +69,7 @@ const SingleProduct = () => {
         <AddedToCart />
 
         <div className="singleWrapper">
-            <SectionHeader title="Suplementy diety" />
+            <SectionHeader title={category} />
 
             <main className="single">
                 <figure className="single__imgWrapper">
@@ -94,6 +101,13 @@ const SingleProduct = () => {
                         </h4>
                         <p className="single__info__p" dangerouslySetInnerHTML={{__html: product.details}}>
 
+                        </p>
+
+                        <h4 className="single__info__header">
+                            Darmowa dostawa
+                        </h4>
+                        <p className="single__info__p">
+                            Zamów produkty za minimum 200 zł, a otrzymasz od nas darmową dostawę!
                         </p>
                     </main>
                     {product.stock ? <button className="button button--singleAddToCart" onClick={() => { addProductToCart(product.id, product.name, 1, product.file_path, product.discount ? product.discount : product.price); }}>

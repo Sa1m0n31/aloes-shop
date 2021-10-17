@@ -418,12 +418,20 @@ con.connect(err => {
 
         /* ADD ORDER */
         router.post("/add", (request, response) => {
-            let {paymentMethod, shippingMethod, city, address, postalCode, sessionId, user, comment, companyName, nip, companyAddress, companyPostalCode, companyCity, amount, inPostAddress, inPostCode, inPostCity} = request.body;
+            let {paymentMethod, shippingMethod, city, address, postalCode, sessionId, user, comment, companyName, nip, companyAddress, companyPostalCode, companyCity, amount, inPostAddress, inPostCode, inPostCity, dhlAddress, dhlPostCode, dhlCity} = request.body;
 
             let paymentStatus = "nieopłacone";
             if(paymentMethod === 2) {
                 /* Payment method - za pobraniem */
                 paymentStatus = "za pobraniem";
+            }
+
+            if(!inPostAddress) {
+                if(dhlAddress) {
+                    inPostAddress = dhlAddress;
+                    inPostCity = dhlCity;
+                    inPostCode = dhlPostCode;
+                }
             }
 
             let values = [paymentMethod, shippingMethod, city, address, postalCode, user, paymentStatus, comment, sessionId, companyName, nip, companyAddress, companyPostalCode, companyCity, amount, inPostAddress, inPostCode, inPostCity];

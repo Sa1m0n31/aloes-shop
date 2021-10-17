@@ -6,9 +6,9 @@ const AdvantagesItem = ({img, title, text}) => {
         <h3 className="advantages__header">
             {title}
         </h3>
-        <p className="advantages__text">
+        {text ? <p className="advantages__text">
             {text}
-        </p>
+        </p> : ""}
     </section>
 }
 

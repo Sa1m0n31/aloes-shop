@@ -438,7 +438,7 @@ con.connect(err => {
    router.post("/get-product-categories", (request, response) => {
       const { id } = request.body;
       const values = [id];
-      const query = 'SELECT * FROM product_categories WHERE product_id = ?';
+      const query = 'SELECT * FROM product_categories pc JOIN categories c ON pc.category_id = c.id WHERE pc.product_id = ?';
       con.query(query, values, (err, res) => {
          if(res) {
             response.send({

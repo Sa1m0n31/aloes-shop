@@ -34,7 +34,7 @@ import OrderDetails from "./admin/pages/OrderDetails";
 import {getProductById} from "./helpers/productFunctions";
 import Page from "./pages/Page";
 import AfterRegisterPage from "./pages/AfterRegisterPage";
-import {getPagesContent} from "./helpers/pagesFunctions";
+import CookieConsent from "react-cookie-consent";
 import SearchResult from "./pages/SearchResults";
 
 const CartContext = React.createContext(null);
@@ -135,6 +135,9 @@ function App() {
 
   return <CartContext.Provider value={{cartContent, addToCart, editCart, removeFromCart}}>
     <Router>
+      <CookieConsent buttonText="OK">
+        Ta strona korzysta z plików cookies w celu usprawnienia i promocji naszych usług. Pozostanie na niej jest równoznaczne z zaakceptowaniem naszej <a className="cookiesLink" href="/polityka-prywatnosci">Polityki Prywatności</a>.
+      </CookieConsent>
     <Route exact path="/">
       <Homepage />
     </Route>

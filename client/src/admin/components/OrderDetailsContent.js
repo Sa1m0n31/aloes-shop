@@ -229,13 +229,19 @@ const OrderDetailsContent = () => {
                         </h4>
                         {cart[0].inpost_address}<br/>
                         {cart[0].inpost_postal_code} {cart[0].inpost_city}
+                    </section> : (cart[0].inpost_address ? <section className="inPost__address">
+                        <h4 className="inPost__address__header">
+                            Adres punktu odbioru DHL:
+                        </h4>
+                        {cart[0].inpost_address}<br/>
+                        {cart[0].inpost_postal_code} {cart[0].inpost_city}
                     </section> : <section className="inPost__address">
                         <h4 className="inPost__address__header">
                             Adres wysyłki:
                         </h4>
                         {cart[0].address}<br/>
                         {cart[0].postal_code} {cart[0].city}
-                    </section>}
+                    </section>)}
 
                     {cart[0].company_name ? <address className="inPost__address">
                         <h4 className="inPost__address__header">
