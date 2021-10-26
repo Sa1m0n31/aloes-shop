@@ -240,7 +240,7 @@ const ShippingAndPaymentForm = () => {
                                                 axios.post(`${settings.API_URL}/payment/payment`, {
                                                     sessionId,
                                                     email: formik.values.email,
-                                                    amount: sum + shippingCost - discountInPLN
+                                                    amount: (sum + shippingCost).toFixed(2)
                                                 })
                                                     .then(res => {
                                                         /* Remove cart from local storage */
@@ -276,9 +276,10 @@ const ShippingAndPaymentForm = () => {
                 if(result) {
                     if(result.percent) {
                         setCouponVerified(1);
-                        setSum(Math.round(sum - sum * (result.percent / 100)));
+                        setSum(sum - sum * (result.percent / 100));
                         setDiscount("-" + result.percent + "%");
-                        setDiscountInPLN(Math.round(sum * (result.percent / 100)));
+                        setDiscountInPLN(sum * (result.percent / 100));
+                        console.log((sum - sum * (result.percent / 100) + shippingCost).toFixed(2));
                     }
                     else if(result.amount) {
                         setCouponVerified(1);
