@@ -203,6 +203,11 @@
         display: block;
     }
 
+    .cart__item__img {
+        width: 100%;
+        height: auto;
+    }
+
     .advantagesDivider,
     .productsRow::before {
         display: none;

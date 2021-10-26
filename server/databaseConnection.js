@@ -2,10 +2,10 @@ const mysql = require("mysql");
 
 const con = mysql.createConnection({
     connectionLimit: 100,
-    host: "18421_aloes.skylo-pl.atthost24.pl",
-    user: "18421_aloes",
-    password: "Sw...",
-    database: "18421_aloes"
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME
 });
 
 module.exports = con;

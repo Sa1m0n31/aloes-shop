@@ -9,8 +9,8 @@ const smtpTransport = require('nodemailer-smtp-transport');
 /* Nodemailer */
 let transporter = nodemailer.createTransport(smtpTransport ({
     auth: {
-        user: 'powiadomienia@skylo-pl.atthost24.pl',
-        pass: '***** *** (Sw...)'
+        user: process.env.MAIL,
+        pass: process.env.MAIL_PASSWORD
     },
     host: 'skylo-pl.atthost24.pl',
     secureConnection: true,
@@ -23,7 +23,7 @@ let transporter = nodemailer.createTransport(smtpTransport ({
 const sendStatus3Email = (id, email, fullName, letterNumber, response = null) => {
     /* status = ZREALIZOWANE */
     let mailOptions = {
-        from: 'powiadomienia@skylo-pl.atthost24.pl',
+        from: process.env.MAIL,
         to: email,
         subject: 'Twoje zamówienie zostało zrealizowane',
         html: `<head>
@@ -35,7 +35,7 @@ const sendStatus3Email = (id, email, fullName, letterNumber, response = null) =>
 </head>
 <body>
 <main style="width: 100%;">
-    <img style="max-width: 100%; width: 800px; margin: 0;" src="http://aloes.skylo-test3.pl/image?url=/media/notifications/caloe-logo.png" alt="zamowienie-zostalo-zrealizowane" />
+    <img style="max-width: 100%; width: 800px; margin: 0;" src="http://caloe.pl/image?url=/media/notifications/caloe-logo.png" alt="zamowienie-zostalo-zrealizowane" />
     <table style="display: block; padding: 20px; color: #000; max-width: 100%; width: 800px; background: #f8f8f8; margin-top: -5px; font-weight: 300; font-family: 'Open Sans', sans-serif;">
         <thead>
             <tr>
@@ -109,7 +109,7 @@ const sendStatus3Email = (id, email, fullName, letterNumber, response = null) =>
 const sendStatus2Email = (id, email, fullName, response = null) => {
     /* status = PRZYJĘTE DO REALIZACJI */
     let mailOptions = {
-        from: 'powiadomienia@skylo-pl.atthost24.pl',
+        from: process.env.MAIL,
         to: email,
         subject: 'Twoje zamówienie zostało przyjęte do realizacji',
         html: `<head>
@@ -121,7 +121,7 @@ const sendStatus2Email = (id, email, fullName, response = null) => {
 </head>
 <body>
 <main style="width: 100%;">
-    <img style="max-width: 100%; width: 800px; margin: 0;" src="http://aloes.skylo-test3.pl/image?url=/media/notifications/caloe-logo.png" alt="zamowienie-zostalo-zrealizowane" />
+    <img style="max-width: 100%; width: 800px; margin: 0;" src="http://caloe.pl/image?url=/media/notifications/caloe-logo.png" alt="zamowienie-zostalo-zrealizowane" />
     <table style="display: block; padding: 20px; color: #000; max-width: 100%; width: 800px; background: #f8f8f8; margin-top: -5px; font-weight: 300; font-family: 'Open Sans', sans-serif;">
         <thead>
             <tr>
@@ -213,7 +213,7 @@ const sendStatus1Email = (orderInfo, response = null) => {
 
     /* status = ZŁOŻONE */
     let mailOptions = {
-        from: 'powiadomienia@skylo-pl.atthost24.pl',
+        from: process.env.MAIL,
         to: orderInfo[0].email,
         subject: 'Dziękujemy za złożenie zamówienia w sklepie Caloe',
         html: `<head>
@@ -226,7 +226,7 @@ const sendStatus1Email = (orderInfo, response = null) => {
 </head>
 <body>
 <main style="width: 100%;">
-    <img style="max-width: 100%; width: 800px; margin: 0;" src="https://aloes.skylo-test3.pl/image?url=/media/notifications/caloe-logo.png" alt="zamowienie-zostalo-zlozone"/>
+    <img style="max-width: 100%; width: 800px; margin: 0;" src="https://caloe.pl/image?url=/media/notifications/caloe-logo.png" alt="zamowienie-zostalo-zlozone"/>
     <table
         style="display: block; padding: 20px; color: #000; max-width: 100%; width: 800px; background: #f8f8f8; margin-top: -5px; font-weight: 300; font-family: 'Open Sans', sans-serif;">
         <thead style="display: block;">

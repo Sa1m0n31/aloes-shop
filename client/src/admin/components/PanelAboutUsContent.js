@@ -135,7 +135,7 @@ const PanelAboutUsContent = () => {
 
                 {addedMsg === "" ? <form className="panelContent__frame__form categoriesForm"
                                          method="POST"
-                                         action={update ? "https://aloes.skylo-test3.pl/about-us/update" : "https://aloes.skylo-test3.pl/about-us/add"}
+                                         action={update ? "https://caloe.pl/about-us/update" : "https://caloe.pl/about-us/add"}
                                          onSubmit={(e) => { handleSubmit(e) }}
                                          encType="multipart/form-data"
                 >

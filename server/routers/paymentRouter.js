@@ -1,16 +1,14 @@
 const express = require("express");
 const router = express.Router();
+require('dotenv').config()
 const con = require("../databaseConnection");
-const multer = require("multer");
-const fs = require("fs");
-const path = require("path");
 const got = require("got");
 const cors = require("cors");
 const crypto = require("crypto");
 const { v4: uuidv4 } = require('uuid');
 
-const API_KEY = 'f33b2f05-5c5e-48e3-a83f-3193410a0ede';
-const SIGNATURE_KEY = '4106b3c3-8ef7-4270-a918-2d6847a6886a';
+const API_KEY = process.env.PAYMENT_API_KEY;
+const SIGNATURE_KEY = process.env.PAYMENT_SIGNATURE_KEY;
 
 con.connect(err => {
     /* Set Przelewy24 credentials */

@@ -36,16 +36,19 @@ import Page from "./pages/Page";
 import AfterRegisterPage from "./pages/AfterRegisterPage";
 import CookieConsent from "react-cookie-consent";
 import SearchResult from "./pages/SearchResults";
+import axios from "axios";
+import credentials from "./helpers/credentials";
+require('dotenv').config();
 
 const CartContext = React.createContext(null);
+
+axios.defaults.headers.common['Authorization'] = credentials.AUTH_HEADER;
 
 function App() {
   const [cartContent, setCartContent] = useState(localStorage.getItem('sec-cart') ? JSON.parse(localStorage.getItem('sec-cart')) : []);
 
   const addToCart = (id, title, amount, img, price) => {
     const uuid = uuidv4();
-
-    console.log("Add product with id = " + id);
 
     let existedUuid, existedAmount = 0;
 

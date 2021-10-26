@@ -1,11 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const con = require("../databaseConnection");
-const multer = require("multer");
-const fs = require("fs");
-const path = require("path");
-
-const upload = multer({ dest: 'uploads/' });
+require('dotenv').config();
 
 con.connect((err) => {
     /* UPDATE INFO */

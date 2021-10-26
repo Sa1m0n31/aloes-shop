@@ -1,9 +1,18 @@
 const express = require("express");
+require('dotenv').config()
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
-
+const auth = require('./auth.js');
 const app = express();
+
+const basicAuth = new auth().basicAuth;
+
+/* HTTPS redirection */
+app.enable('trust proxy')
+app.use((req, res, next) => {
+    req.secure ? next() : res.redirect('https://' + req.headers.host + req.url)
+})
 
 /* Middleware */
 app.use(cors());
@@ -111,21 +120,21 @@ const homepageRouter = require("./routers/homepageRouter");
 const notificationRouter = require("./routers/notificationRouter");
 const stockRouter = require("./routers/stockRouter");
 
-app.use("/auth", authRouter);
-app.use("/user", userRouter);
-app.use("/shipping", shippingRouter);
-app.use("/payment-methods", paymentMethodsRouter);
+app.use("/auth", basicAuth, authRouter);
+app.use("/user", basicAuth, userRouter);
+app.use("/shipping", basicAuth, shippingRouter);
+app.use("/payment-methods", basicAuth, paymentMethodsRouter);
 app.use("/category", categoryRouter);
 app.use("/product", productRouter);
-app.use("/order", orderRouter);
+app.use("/order", basicAuth, orderRouter);
 app.use("/image", imageRouter);
 app.use("/payment", paymentRouter);
 app.use("/pages", pagesRouter);
-app.use("/coupon", couponRouter);
-app.use("/newsletter", newsletterRouter);
+app.use("/coupon", basicAuth, couponRouter);
+app.use("/newsletter", basicAuth, newsletterRouter);
 app.use("/homepage", homepageRouter);
-app.use("/notification", notificationRouter);
-app.use("/stock", stockRouter);
+app.use("/notification", basicAuth, notificationRouter);
+app.use("/stock", basicAuth, stockRouter);
 
 app.listen(5000, () => {
     console.log("Listening on port 5000");

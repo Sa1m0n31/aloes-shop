@@ -95,12 +95,12 @@ con.connect(err => {
                                        const values = [mainImageId, productId];
                                        const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                                        con.query(query, values, (err, res) => {
-                                          if(res) response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=1");
-                                          else response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
+                                          if(res) response.redirect("https://caloe.pl/panel/dodaj-produkt?add=1");
+                                          else response.redirect("https://caloe.pl/panel/dodaj-produkt?add=0");
                                        });
                                     }
                                     else {
-                                       response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
+                                       response.redirect("https://caloe.pl/panel/dodaj-produkt?add=0");
                                     }
                                  }
                               })
@@ -124,12 +124,12 @@ con.connect(err => {
                                  const values = [mainImageId, productId];
                                  const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                                  con.query(query, values, (err, res) => {
-                                    if(res) response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=1");
-                                    else response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
+                                    if(res) response.redirect("https://caloe.pl/panel/dodaj-produkt?add=1");
+                                    else response.redirect("https://caloe.pl/panel/dodaj-produkt?add=0");
                                  });
                               }
                               else {
-                                 response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
+                                 response.redirect("https://caloe.pl/panel/dodaj-produkt?add=0");
                               }
                            }
                         })
@@ -138,7 +138,7 @@ con.connect(err => {
                });
             }
             else {
-               response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
+               response.redirect("https://caloe.pl/panel/dodaj-produkt?add=0");
             }
          });
       });
@@ -216,12 +216,12 @@ con.connect(err => {
                                           const values = [mainImageId, id];
                                           const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                                           con.query(query, values, (err, res) => {
-                                             if(res) response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=1");
-                                             else response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
+                                             if(res) response.redirect("https://caloe.pl/panel/dodaj-produkt?add=1");
+                                             else response.redirect("https://caloe.pl/panel/dodaj-produkt?add=0");
                                           });
                                        }
                                        else {
-                                          response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
+                                          response.redirect("https://caloe.pl/panel/dodaj-produkt?add=0");
                                        }
                                     }
                                  })
@@ -232,8 +232,8 @@ con.connect(err => {
                               const values = [mainImageId, id];
                               const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                               con.query(query, values, (err, res) => {
-                                 if(res) response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=1");
-                                 else response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=1");
+                                 if(res) response.redirect("https://caloe.pl/panel/dodaj-produkt?add=1");
+                                 else response.redirect("https://caloe.pl/panel/dodaj-produkt?add=1");
                               });
                            }
                         }
@@ -258,12 +258,12 @@ con.connect(err => {
                                        const values = [mainImageId, id];
                                        const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                                        con.query(query, values, (err, res) => {
-                                          if(res) response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=1");
-                                          else response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=1");
+                                          if(res) response.redirect("https://caloe.pl/panel/dodaj-produkt?add=1");
+                                          else response.redirect("https://caloe.pl/panel/dodaj-produkt?add=1");
                                        });
                                     }
                                     else {
-                                       response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
+                                       response.redirect("https://caloe.pl/panel/dodaj-produkt?add=0");
                                     }
                                  }
                               })
@@ -274,8 +274,8 @@ con.connect(err => {
                            const values = [mainImageId, id];
                            const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                            con.query(query, values, (err, res) => {
-                              if(res) response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=1");
-                              else response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
+                              if(res) response.redirect("https://caloe.pl/panel/dodaj-produkt?add=1");
+                              else response.redirect("https://caloe.pl/panel/dodaj-produkt?add=0");
                            });
                         }
                      }
@@ -283,7 +283,7 @@ con.connect(err => {
                });
             }
             else {
-               response.redirect("https://aloes.skylo-test3.pl/panel/dodaj-produkt?add=0");
+               response.redirect("https://caloe.pl/panel/dodaj-produkt?add=0");
             }
          });
       });
