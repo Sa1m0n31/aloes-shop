@@ -61,7 +61,7 @@ con.connect(err => {
 
         let signature = crypto.createHmac('sha256', SIGNATURE_KEY).update(JSON.stringify(postData)).digest("base64");
 
-        got.post('https://api.sandbox.paynow.pl/v1/payments', {
+        got.post('https://api.paynow.pl/v1/payments', {
             json: postData,
             responseType: 'json',
             headers: {

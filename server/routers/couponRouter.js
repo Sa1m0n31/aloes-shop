@@ -67,7 +67,7 @@ con.connect(err => {
         const { code } = request.body;
 
         const values = [code];
-        const query = 'SELECT id, percent, amount FROM coupons WHERE code = ? AND date_from <= CURRENT_TIMESTAMP AND date_to >= CURRENT_TIMESTAMP AND (times_to_use > 0 OR times_to_use IS NULL)';
+        const query = 'SELECT id, percent, amount FROM coupons WHERE code = ? AND date_from <= CURRENT_TIMESTAMP + INTERVAL 1 DAY AND date_to >= CURRENT_TIMESTAMP AND (times_to_use > 0 OR times_to_use IS NULL)';
         con.query(query, values, (err, res) => {
            if(res[0]) {
                if(res[0].id) {
