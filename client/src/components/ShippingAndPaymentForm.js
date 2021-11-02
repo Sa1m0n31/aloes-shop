@@ -141,7 +141,7 @@ const ShippingAndPaymentForm = () => {
     }
 
     useEffect(() => {
-        if((shipping !== -1)&&(sum < 200)) {
+        if((shipping !== -1)&&(parseFloat(sum.toString()) + parseFloat(discountInPLN.toString()) < 200)) {
             setShippingCost(getShippingMethodById(shipping).price);
         }
     }, [shipping]);
@@ -222,7 +222,8 @@ const ShippingAndPaymentForm = () => {
             /* Add order */
             addNewOrder(payment, shipping, formik.values.address, formik.values.postalCode, formik.values.city, insertedUserId !== -1 && insertedUserId ? insertedUserId : parseInt(localStorage.getItem('sec-user-id')),
                 formik.values.comment, sessionId, formik.values.companyName, formik.values.nip, formik.values.companyAddress, formik.values.companyPostalCode, formik.values.companyCity,
-                sum + shippingCost - discountInPLN, sessionStorage.getItem('paczkomat-adres'), sessionStorage.getItem('paczkomat-kod'), sessionStorage.getItem('paczkomat-miasto'), dhlAddress, dhlPostalCode, dhlCity)
+                (sum + shippingCost).toFixed(2), sessionStorage.getItem('paczkomat-adres'), sessionStorage.getItem('paczkomat-kod'), sessionStorage.getItem('paczkomat-miasto'), dhlAddress, dhlPostalCode, dhlCity,
+                discountInPLN, coupon)
                 .then(res => {
                     const orderId = res.data.result;
 
@@ -240,7 +241,8 @@ const ShippingAndPaymentForm = () => {
                                                 axios.post(`${settings.API_URL}/payment/payment`, {
                                                     sessionId,
                                                     email: formik.values.email,
-                                                    amount: (sum + shippingCost).toFixed(2)
+                                                    amount: (sum + shippingCost).toFixed(2),
+                                                    continueUrl: "https://caloe.pl/dziekujemy"
                                                 })
                                                     .then(res => {
                                                         /* Remove cart from local storage */
@@ -278,8 +280,7 @@ const ShippingAndPaymentForm = () => {
                         setCouponVerified(1);
                         setSum(sum - sum * (result.percent / 100));
                         setDiscount("-" + result.percent + "%");
-                        setDiscountInPLN(sum * (result.percent / 100));
-                        console.log((sum - sum * (result.percent / 100) + shippingCost).toFixed(2));
+                        setDiscountInPLN((sum * (result.percent / 100)).toFixed(2));
                     }
                     else if(result.amount) {
                         setCouponVerified(1);
@@ -358,6 +359,11 @@ const ShippingAndPaymentForm = () => {
             }, 3000);
         }
     }, [submissionDisabled]);
+
+    useEffect(() => {
+        console.log(sum);
+        console.log(discountInPLN);
+    }, [coupon, couponVerified]);
 
     Modal.setAppElement(document.querySelector(".shippingAndPayment"));
 
@@ -524,7 +530,7 @@ const ShippingAndPaymentForm = () => {
                             <button type="button" className="checkBtn" onClick={() => { changeShipping(item.id); }}>
                                 {shipping === item.id ? <span className="checkBtn--check"></span> : ""}
                             </button>
-                            {item.name} ({sum >= 200 ? 0 : item.price} PLN)
+                            {item.name} ({parseFloat(sum.toString()) + parseFloat(discountInPLN.toString()) >= 200 ? 0 : item.price} PLN)
                         </label>
                             {index === 0 && shipping === 1 ? <span className="label--vat">
                                 {inPostAddress}<br/>

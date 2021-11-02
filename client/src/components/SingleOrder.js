@@ -11,7 +11,6 @@ const SingleOrder = ({id, sells, date, paymentId, orderStatus, paymentLink, orde
     useEffect(() => {
         getPaymentStatus(paymentId)
             .then((res) => {
-                console.log(JSON.parse(res.data.result));
                 if(JSON.parse(res.data.result).status === "CONFIRMED") {
                     setPaymentStatus("Opłacone");
                 }

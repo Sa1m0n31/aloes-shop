@@ -15,7 +15,7 @@ const addNewOrder = (payment, shipping, address, postalCode, city, user,
                      comment, sessionId, companyName, nip, companyAddress,
                      companyPostalCode, companyCity, amount,
                      inPostAddress, inPostCode, inPostCity,
-                     dhlAddress, dhlPostCode, dhlCity
+                     dhlAddress, dhlPostCode, dhlCity, discount, coupon
                      ) => {
     return axios.post(`${API_URL}/order/add`, {
         paymentMethod: payment,
@@ -37,7 +37,9 @@ const addNewOrder = (payment, shipping, address, postalCode, city, user,
         inPostCity,
         dhlAddress,
         dhlPostCode,
-        dhlCity
+        dhlCity,
+        discount,
+        coupon
     })
 }
 

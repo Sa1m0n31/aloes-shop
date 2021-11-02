@@ -8,25 +8,23 @@ import {getPaymentStatus} from "../admin/helpers/paymentFunctions";
 import {updatePaymentStatus} from "../admin/helpers/orderFunctions";
 
 const TyPage = () => {
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const paymentId = params.get('paymentId');
-
-        if(paymentId) {
-            getPaymentStatus(paymentId)
-                .then(res => {
-                    const result = res?.data?.result;
-                    console.log(result);
-                    if(result) {
-                        console.log(paymentId);
-                        updatePaymentStatus(paymentId, "opłacone");
-                    }
-                });
-        }
-        else {
-            window.location = "/";
-        }
-    }, []);
+    // useEffect(() => {
+    //     const params = new URLSearchParams(window.location.search);
+    //     const paymentId = params.get('paymentId');
+    //
+    //     if(paymentId) {
+    //         getPaymentStatus(paymentId)
+    //             .then(res => {
+    //                 const result = res?.data?.result;
+    //                 if(result) {
+    //                     updatePaymentStatus(paymentId, "opłacone");
+    //                 }
+    //             });
+    //     }
+    //     else {
+    //         window.location = "/";
+    //     }
+    // }, []);
 
     return <div className="container">
         <SiteHeader />

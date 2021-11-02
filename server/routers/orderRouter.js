@@ -273,7 +273,15 @@ const sendStatus1Email = (orderInfo, response = null) => {
                 Koszt dostawy:
             </td>
             <td style="font-size: 14px;">
-                ${orderInfo[0].shipping_method_price} PLN
+                ${sum >= 200 ? "0 PLN" : orderInfo[0].shipping_method_price} PLN
+            </td>
+        </tr>
+        <tr style="display: block; margin-top: 5px;">
+            <td style="font-size: 14px; width: 150px;">
+                Rabat:
+            </td>
+            <td style="font-size: 14px;">
+                ${orderInfo[0].discount ? orderInfo[0].discount + " PLN" : "Brak"}
             </td>
         </tr>
         <tr style="display: block; margin-top: 5px; border-bottom: 3px solid #976C2B; padding-bottom: 15px;">
@@ -356,7 +364,7 @@ con.connect(err => {
     router.post("/send-order-info", (request, response) => {
         const { orderId } = request.body;
 
-        const query = 'SELECT o.id, o.order_price, p.name, p.price, s.quantity, s.size, pm.name as payment_method, sm.name as shipping_method, sm.price as shipping_method_price, o.inpost_address, o.inpost_postal_code, o.inpost_city, o.nip, o.company_name, u.email, u.full_name, u.address, u.city, u.postal_code FROM orders o JOIN users u ON u.id = o.user JOIN payment_methods pm ON pm.id = o.payment_method JOIN shipping_methods sm ON sm.id = o.shipping_method JOIN sells s ON s.order_id = o.id JOIN products p ON p.id = s.product_id WHERE o.id = ?';
+        const query = 'SELECT o.id, o.order_price, o.discount, p.name, p.price, s.quantity, s.size, pm.name as payment_method, sm.name as shipping_method, sm.price as shipping_method_price, o.inpost_address, o.inpost_postal_code, o.inpost_city, o.nip, o.company_name, u.email, u.full_name, u.address, u.city, u.postal_code FROM orders o JOIN users u ON u.id = o.user JOIN payment_methods pm ON pm.id = o.payment_method JOIN shipping_methods sm ON sm.id = o.shipping_method JOIN sells s ON s.order_id = o.id JOIN products p ON p.id = s.product_id WHERE o.id = ?';
         const values = [orderId];
         con.query(query, values, (err, res) => {
             if(res) {
@@ -418,7 +426,7 @@ con.connect(err => {
 
         /* ADD ORDER */
         router.post("/add", (request, response) => {
-            let {paymentMethod, shippingMethod, city, address, postalCode, sessionId, user, comment, companyName, nip, companyAddress, companyPostalCode, companyCity, amount, inPostAddress, inPostCode, inPostCity, dhlAddress, dhlPostCode, dhlCity} = request.body;
+            let {paymentMethod, shippingMethod, discount, coupon, city, address, postalCode, sessionId, user, comment, companyName, nip, companyAddress, companyPostalCode, companyCity, amount, inPostAddress, inPostCode, inPostCity, dhlAddress, dhlPostCode, dhlCity} = request.body;
 
             let paymentStatus = "nieopłacone";
             if(paymentMethod === 2) {
@@ -434,8 +442,8 @@ con.connect(err => {
                 }
             }
 
-            let values = [paymentMethod, shippingMethod, city, address, postalCode, user, paymentStatus, comment, sessionId, companyName, nip, companyAddress, companyPostalCode, companyCity, amount, inPostAddress, inPostCode, inPostCity];
-            const query = `INSERT INTO orders VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, 'złożone', CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)`;
+            let values = [paymentMethod, shippingMethod, city, address, postalCode, user, paymentStatus, comment, sessionId, companyName, nip, companyAddress, companyPostalCode, companyCity, amount, inPostAddress, inPostCode, inPostCity, discount, coupon];
+            const query = `INSERT INTO orders VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, 'złożone', CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?)`;
 
             values = values.map((item) => {
                 if (item === "") return null;
@@ -587,7 +595,7 @@ con.connect(err => {
         router.post("/get-order", (request, response) => {
             const {id} = request.body;
             const values = [id];
-            const query = 'SELECT o.id, o.payment_status, o.order_status, o.order_comment, u.full_name, u.email, u.phone_number, DATE_ADD(o.date, INTERVAL 2 HOUR) as date, o.order_status, pm.name as payment, sm.name as shipping, o.order_comment, o.address, o.postal_code, o.city, o.company_name, o.nip, o.company_address, o.company_postal_code, o.company_city, s.quantity, p.price, p.name, o.inpost_address, o.inpost_postal_code, inpost_city FROM orders o ' +
+            const query = 'SELECT o.id, o.payment_status, o.order_status, o.order_price, o.order_comment, o.przelewy24_id, o.discount, o.discount_code, u.full_name, u.email, u.phone_number, DATE_ADD(o.date, INTERVAL 2 HOUR) as date, o.order_status, pm.name as payment, sm.name as shipping, sm.price as shipping_price, o.order_comment, o.address, o.postal_code, o.city, o.company_name, o.nip, o.company_address, o.company_postal_code, o.company_city, s.quantity, p.price, p.name, o.inpost_address, o.inpost_postal_code, inpost_city FROM orders o ' +
                 'JOIN sells s ON o.id = s.order_id ' +
                 'LEFT OUTER JOIN products p ON p.id = s.product_id ' +
                 'JOIN shipping_methods sm ON o.shipping_method = sm.id ' +
@@ -595,8 +603,6 @@ con.connect(err => {
                 'JOIN users u ON u.id = o.user ' +
                 'WHERE o.id = ?;';
             con.query(query, values, (err, res) => {
-                console.log(err);
-                console.log(res);
                 if(res) {
                     response.send({
                         result: res

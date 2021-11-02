@@ -10,6 +10,7 @@ import Modal from 'react-modal'
 import closeImg from "../static/img/close.png";
 import axios from "axios";
 import settings from "../helpers/settings";
+import {getPaymentStatus} from "../helpers/paymentFunctions";
 
 const OrderDetailsContent = () => {
     const location = useLocation();
@@ -22,6 +23,7 @@ const OrderDetailsContent = () => {
     const [comment, setComment] = useState("");
     const [orderStatus, setOrderStatus] = useState("");
     const [orderUpdated, setOrderUpdated] = useState(-1);
+    const [paymentStatus, setPaymentStatus] = useState(false);
 
     useEffect(() => {
         /* Get order id from url string */
@@ -38,6 +40,15 @@ const OrderDetailsContent = () => {
                    console.log(res.data.result);
                    setOrderStatus(res.data.result[0].order_status);
                    setComment(res.data.result[0].order_comment);
+
+                   console.log(res.data.result[0]);
+                   getPaymentStatus(res.data.result[0].przelewy24_id)
+                       .then((res) => {
+                           console.log(res.data.result);
+                           if(JSON.parse(res.data.result).status === "CONFIRMED") {
+                               setPaymentStatus(true);
+                           }
+                       });
                }
                calculateCartSum();
             });
@@ -166,7 +177,7 @@ const OrderDetailsContent = () => {
                                 <span>Ilość: {item.quantity}</span>
                             </section>
                             <section className="panelContent__cart__column">
-                                <span>{item.option}</span>
+                                <span>{item.price} PLN</span>
                             </section>
                             <section className="panelContent__cart__column">
                                 <span>{item.size ? `Rozmiar: ${item.size}` : ""}</span>
@@ -206,7 +217,7 @@ const OrderDetailsContent = () => {
                     {cart?.length ? <section className="panelContent__orderStatus">
                         <h2 className="panelContent__orderStatus__header">
                             Opłacone:
-                            <img className="panelContent__orderStatus__img" src={cart[0].payment_status?.toLowerCase() === "opłacone" ? tick : x} alt="oplacone" />
+                            <img className="panelContent__orderStatus__img" src={paymentStatus ? tick : x} alt="oplacone" />
                         </h2>
                         <h2 className="panelContent__orderStatus__header">
                             Faktura VAT:
@@ -221,6 +232,20 @@ const OrderDetailsContent = () => {
                     </h2>
                     <h2 className="panelContent__header--smaller mt-3">
                         Płatność: <b>{cart[0].payment}</b>
+                    </h2>
+                    <h2 className="panelContent__header--smaller mt-3">
+                        Kwota dostawy: <b>{cart[0].order_price + cart[0].shipping_price >= 200 ? 0 : cart[0].shipping_price} PLN</b>
+                    </h2>
+                    {cart[0].discount ?
+                        <h2 className="panelContent__header--smaller mt-3">
+                            Rabat: <b>{cart[0].discount} PLN</b>
+                        </h2> : ""}
+                    {cart[0].discount_code ?
+                        <h2 className="panelContent__header--smaller mt-3">
+                            Kod rabatowy: <b>{cart[0].discount_code}</b>
+                        </h2> : ""}
+                    <h2 className="panelContent__header--smaller mt-3">
+                        Razem do zapłaty: <b>{cart[0].order_price} PLN</b>
                     </h2>
 
                     {cart[0].shipping === "Paczkomaty InPost" ? <section className="inPost__address">
