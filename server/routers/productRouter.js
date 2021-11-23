@@ -4,8 +4,47 @@ const multer = require("multer");
 const got = require("got");
 const con = require("../databaseConnection");
 const path = require("path");
+const xml = require("xml");
+const fs = require("fs");
 
 con.connect(err => {
+   const generateRSSFeed = () => {
+      const query = `SELECT p.id, p.name, p.subtitle, p.description, p.date, p.stock, c.name as category, p.price, p.discount, i.file_path FROM products p 
+LEFT OUTER JOIN product_categories pc ON p.id = pc.product_id
+LEFT OUTER JOIN categories c ON pc.category_id = c.id
+LEFT OUTER JOIN images i ON p.main_image = i.id`;
+
+      con.query(query, [], (err, res) => {
+            if(res) {
+               const feedItems = res.map((item) => {
+                  return {
+                     product: [
+                        { product_id: item.id },
+                        { name: item.name },
+                        { quantity: item.stock },
+                        { category_name: item.category },
+                        { manufacturer_name: 'Forever Living Product' },
+                        { price: item.price },
+                        { description: item.subtitle },
+                        { description_extra: item.description.replace(/<[^>]*>/g, '') },
+                        { image: `https://caloe.pl/image?url=media/${item.file_path}` }
+                     ]
+                  }
+               });
+
+               const feed = xml({
+                  products: feedItems
+               });
+
+              fs.writeFile('feed.xml', feed, {
+                 encoding: 'utf-8'
+              }, (err) => {
+                  // Write file
+              });
+            }
+      });
+   }
+
    /* GET NEW ID */
    router.get("/last-product", (request, response) => {
       const query = 'SELECT id FROM products ORDER BY date DESC LIMIT 1';
@@ -95,6 +134,7 @@ con.connect(err => {
                                        const values = [mainImageId, productId];
                                        const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                                        con.query(query, values, (err, res) => {
+                                          generateRSSFeed();
                                           if(res) response.redirect("https://caloe.pl/panel/dodaj-produkt?add=1");
                                           else response.redirect("https://caloe.pl/panel/dodaj-produkt?add=0");
                                        });
@@ -124,6 +164,7 @@ con.connect(err => {
                                  const values = [mainImageId, productId];
                                  const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                                  con.query(query, values, (err, res) => {
+                                    generateRSSFeed();
                                     if(res) response.redirect("https://caloe.pl/panel/dodaj-produkt?add=1");
                                     else response.redirect("https://caloe.pl/panel/dodaj-produkt?add=0");
                                  });
@@ -211,11 +252,11 @@ con.connect(err => {
                                     if(index === array.length-1) {
                                        /* 4 - MODIFY MAIN_IMAGE COLUMN IN PRODUCTS TABLE */
                                        if(res) {
-                                          console.log("I'm ready to modify mainImageId");
                                           const mainImageId = res.insertId;
                                           const values = [mainImageId, id];
                                           const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                                           con.query(query, values, (err, res) => {
+                                             generateRSSFeed();
                                              if(res) response.redirect("https://caloe.pl/panel/dodaj-produkt?add=1");
                                              else response.redirect("https://caloe.pl/panel/dodaj-produkt?add=0");
                                           });
@@ -232,6 +273,7 @@ con.connect(err => {
                               const values = [mainImageId, id];
                               const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                               con.query(query, values, (err, res) => {
+                                 generateRSSFeed();
                                  if(res) response.redirect("https://caloe.pl/panel/dodaj-produkt?add=1");
                                  else response.redirect("https://caloe.pl/panel/dodaj-produkt?add=1");
                               });
@@ -258,6 +300,7 @@ con.connect(err => {
                                        const values = [mainImageId, id];
                                        const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                                        con.query(query, values, (err, res) => {
+                                          generateRSSFeed();
                                           if(res) response.redirect("https://caloe.pl/panel/dodaj-produkt?add=1");
                                           else response.redirect("https://caloe.pl/panel/dodaj-produkt?add=1");
                                        });
@@ -270,10 +313,10 @@ con.connect(err => {
                            });
                         }
                         else {
-                           console.log("no category. no images");
                            const values = [mainImageId, id];
                            const query = 'UPDATE products SET main_image = ? WHERE id = ?';
                            con.query(query, values, (err, res) => {
+                              generateRSSFeed();
                               if(res) response.redirect("https://caloe.pl/panel/dodaj-produkt?add=1");
                               else response.redirect("https://caloe.pl/panel/dodaj-produkt?add=0");
                            });
@@ -332,6 +375,7 @@ con.connect(err => {
       const query = 'DELETE FROM products WHERE id = ?';
       con.query(query, values, (err, res) => {
          let result = 0;
+         generateRSSFeed();
          if(res) result = 1;
          response.send({
             result
@@ -532,11 +576,6 @@ con.connect(err => {
             });
          }
       });
-   });
-
-   /* GET PRODUCTS BY CATEGORIES LIST */
-   router.post("/get-products-by-categories", (request, response) => {
-
    });
 });
 

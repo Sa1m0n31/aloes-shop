@@ -103,6 +103,12 @@ app.get("/konto-zalozone", (req, res) => {
     res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
+app.get('/feed', function(req, res){
+    res.contentType('application/xml');
+    res.sendFile(path.join(__dirname , 'feed.xml'));
+});
+
+
 /* Routers */
 const authRouter = require("./routers/authRouter");
 const userRouter = require("./routers/userRouter");
