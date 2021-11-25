@@ -7,6 +7,22 @@ const path = require("path");
 const xml = require("xml");
 const fs = require("fs");
 
+const convertToURL = (str) => {
+   if(str) return str.toLowerCase()
+       .replace(/-/g, "--")
+       .replace(/ /g, "-")
+       .replace(/ą/g, "a")
+       .replace(/ć/g, "c")
+       .replace(/ę/g, "e")
+       .replace(/ł/g, "l")
+       .replace(/ń/g, "n")
+       .replace(/ó/g, "o")
+       .replace(/ś/g, "s")
+       .replace(/ź/g, "z")
+       .replace(/ż/g, "z")
+   else return "";
+}
+
 con.connect(err => {
    const generateRSSFeed = () => {
       const query = `SELECT p.id, p.name, p.subtitle, p.description, p.date, p.stock, c.name as category, p.price, p.discount, i.file_path FROM products p 
@@ -19,21 +35,43 @@ LEFT OUTER JOIN images i ON p.main_image = i.id`;
                const feedItems = res.map((item) => {
                   return {
                      product: [
-                        { product_id: item.id },
-                        { name: item.name },
+                        { id: item.id },
+                        { title: item.name },
                         { quantity: item.stock },
-                        { category_name: item.category },
+                        { google_product_category: item.category },
                         { manufacturer_name: 'Forever Living Product' },
+                        { brand: 'Forever Living Product' },
                         { price: item.price },
                         { description: item.subtitle },
                         { description_extra: item.description.replace(/<[^>]*>/g, '') },
-                        { image: `https://caloe.pl/image?url=media/${item.file_path}` }
+                        { image_link: `https://caloe.pl/image?url=media/${item.file_path}` },
+                        { link: `https://caloe.pl/produkt/${convertToURL(item.name)}` },
+                        { availability: item.stock > 0 ? 'in stock' : 'out of stock' },
+                        { condition: 'new' },
+                        { shipping: {
+                           country: 'PL'
+                        }}
                      ]
                   }
                });
 
                const feed = xml({
-                  products: feedItems
+                  rss: [
+                     {
+                        _attr: {
+                           xmlns: 'http://base.google.com/ns/1.0',
+                           version: '2.0'
+                        }
+                     },
+                     {
+                        channel: [
+                           { title: 'Caloe' },
+                           { link: 'https://caloe.pl' },
+                           { description: 'Google Shopping Feed' },
+                           { products: feedItems }
+                        ]
+                     }
+                  ]
                });
 
               fs.writeFile('feed.xml', feed, {
